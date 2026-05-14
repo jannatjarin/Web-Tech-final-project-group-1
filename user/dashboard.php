@@ -233,4 +233,52 @@ button:hover
 
 </div>
 
+<div class="recipe-section">
+
+<h2>Recently Viewed Recipes</h2>
+
+<div class="recipe-card">
+
+<img src="chiken curry.jpg">
+
+<h3>Chicken Curry</h3>
+
+<p>Indian Cuisine</p>
+
+<button>View Recipe</button>
+
+</div>
+
+<div class="recipe-card">
+
+<img src="spaghatti.jpg">
+
+<h3>Spaghetti Bolognese</h3>
+
+<p>Italian Cuisine</p>
+
+<button>View Recipe</button>
+
+</div>
+
+<div class="recipe-card">
+
+<img src="salad.jpg">
+
+<h3>Healthy Salad</h3>
+
+<p>Healthy Food</p>
+
+<button>View Recipe</button>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+
 
