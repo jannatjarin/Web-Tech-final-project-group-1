@@ -10,4 +10,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $email = $_POST['email'];
 
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $diet = json_encode($_POST['diet']);
+    $role = "user";
+    
     
