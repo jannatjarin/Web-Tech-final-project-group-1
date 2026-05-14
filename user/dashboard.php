@@ -203,4 +203,9 @@ button:hover
 <img src="images/profile.jpg" alt ="profile picture">
 </div>
 
+<h1>Welcome Back, Anu!</h1>
+
+<p>Discover, cook and share amazing recipes.</p>
+
+
 
