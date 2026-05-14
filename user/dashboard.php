@@ -182,6 +182,15 @@ button:hover {
             <p>Healthy Food</p>
             <button>View Recipe</button>
         </div>
+<div class="recipe-card">
+            <img src="images/blini.jpeg">
+            <h3>Blini</h3>
+            <p>Russian Cuisine</p>
+            <button>View Recipe</button>
+        </div>
+
+
+
     </div>
 
 </div>
