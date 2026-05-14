@@ -74,7 +74,7 @@ body
 
 textarea
 {
-    width:100%;
+    width:90%;
     height:100px;
     padding:10px;
     margin-top:10px;
