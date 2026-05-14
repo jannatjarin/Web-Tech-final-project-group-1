@@ -153,3 +153,23 @@ a {
     <th>Unit</th>
     <th>Action</th>
 </tr>
+
+
+<?php foreach ($_SESSION['shopping_list'] as $i => $row) { ?>
+<tr>
+    <td><?php echo $i + 1; ?></td>
+    <td><?php echo htmlspecialchars($row['item']); ?></td>
+    <td><?php echo htmlspecialchars($row['qty']); ?></td>
+    <td><?php echo htmlspecialchars($row['unit']); ?></td>
+    <td><a href="?delete=<?php echo $i; ?>">Delete</a></td>
+</tr>
+<?php } ?>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
