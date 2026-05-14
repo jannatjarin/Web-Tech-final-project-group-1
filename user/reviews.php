@@ -1,4 +1,4 @@
-<!-- reviews.php -->
+<
 <?php
 session_start();
 ?>
@@ -134,7 +134,7 @@ button
 
 <p>Rating: 5 Stars</p>
 
-<textarea>Very Delicious Recipe</textarea>
+<textarea>Very Delicious Recipe ,easy to make.my family loved it</textarea>
 
 <br><br>
 
