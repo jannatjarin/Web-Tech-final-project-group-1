@@ -24,7 +24,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     }
 
-         $sql = "INSERT INTO user (name,username, password, email) 
-                VALUES ('$name,'$username', '$hashedPassword', '$email')";
-                
+         $sql = "INSERT INTO user (name,username, password, email, diet, role) 
+                VALUES ('$name,'$username', '$hashedPassword', '$email' '$role' , '$diet')";
+
+                 if ($conn->query($sql) === TRUE) 
+        {
+            $success = "Registration successful! You can Log in now";
+        } 
+        else 
+        {
+            $error = "Error: " . $conn->error;
+        }
+    }
+}
+?>
+
     
