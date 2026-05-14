@@ -28,6 +28,7 @@ padding: 20px;
 .menu a{
 display: block;
 padding: 10px;
+width: 150px;
 background-color: white;
 margin-bottom: 10px;
 text-decoration: none;
