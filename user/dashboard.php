@@ -195,4 +195,12 @@ button:hover
 
 <a href="profile.php">Profile</a>
 
+<div class="main">
+
+<div class="topbar">
+
+<div class="profile">
+<img src="images/profile.jpg" alt ="profile picture">
+</div>
+
 
