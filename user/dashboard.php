@@ -38,3 +38,21 @@ border-radius: 5px;
 
 </head>
 <body>
+    
+
+<div class="header">
+<h2>User Dashboard</h2>
+</div>
+
+<div class="menu">
+<a href="browse_recipes.php">Browse Recipes</a>
+<a href="bookmarks.php">Bookmarks</a>
+<a href="reviews.php">Reviews</a>
+<a href="shopping_lists.php">Shopping Lists</a>
+<a href="meal_plan.php">Meal Plan</a>
+<a href="chefs.php">Chefs</a>
+<a href="profile.php">Profile</a>
+</div>
+
+</body>
+</html>
