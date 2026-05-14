@@ -20,3 +20,9 @@ if (isset($_POST['add_item'])) {
         ];
     }
 }
+if (isset($_GET['delete'])) {
+    $index = $_GET['delete'];
+    unset($_SESSION['shopping_list'][$index]);
+    $_SESSION['shopping_list'] = array_values($_SESSION['shopping_list']);
+}
+?>
