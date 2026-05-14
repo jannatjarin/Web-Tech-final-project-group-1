@@ -22,4 +22,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     {
         
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    }
+
+         $sql = "INSERT INTO user (name,username, password, email) 
+                VALUES ('$name,'$username', '$hashedPassword', '$email')";
+                
     
