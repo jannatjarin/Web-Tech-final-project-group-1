@@ -16,12 +16,6 @@
 
 <input type="password" name="password" placeholder="Password"><br><br>
 
-<label>Dietary Preferences</label><br>
-
-<input type="checkbox" name="diet[]" value="Vegetarian">Vegetarian
-<input type="checkbox" name="diet[]" value="Vegan">Vegan
-<input type="checkbox" name="diet[]" value="Keto">Keto
-<input type="checkbox" name="diet[]" value="Halal">Halal
 
 </form>
 
