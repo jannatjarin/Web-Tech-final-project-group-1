@@ -145,7 +145,7 @@ button:hover {
 
     <div class="topbar">
         <div class="profile">
-            <img src="images/profile.jpg" alt="profile">
+            <img src="images/profile.jpeg">
         </div>
 
         <h1>Welcome Back, Anu!</h1>
