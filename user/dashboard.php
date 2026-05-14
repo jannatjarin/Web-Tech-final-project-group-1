@@ -206,6 +206,31 @@ button:hover
 <h1>Welcome Back, Anu!</h1>
 
 <p>Discover, cook and share amazing recipes.</p>
+</div>
 
+
+<div class="cards">
+
+<div class="smallcard1">
+<h1>12</h1>
+<p>Bookmarked Recipes</p>
+</div>
+
+<div class="smallcard2">
+<h1>8</h1>
+<p>Reviews Written</p>
+</div>
+
+<div class="smallcard3">
+<h1>3</h1>
+<p>Meal Plans</p>
+</div>
+
+<div class="smallcard4">
+<h1>2</h1>
+<p>Shopping Lists</p>
+</div>
+
+</div>
 
 
