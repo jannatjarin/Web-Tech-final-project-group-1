@@ -289,7 +289,9 @@ button {
 
 </table>
 
-<button>Generate Shopping List</button>
+<a href="shoppinglist.php">
+    <button>Generate Shopping List</button>
+</a>
 
 </div>
 
