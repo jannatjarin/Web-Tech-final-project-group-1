@@ -1,6 +1,71 @@
-
 <?php
 session_start();
+
+/* SESSION CHECK */
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+/* DATABASE CONNECTION (YOUR STYLE) */
+$conn = new mysqli("localhost", "root", "", "recipe_platform");
+
+if ($conn->connect_error) {
+    die("Connection Failed: " . $conn->connect_error);
+}
+
+/* USER ID */
+$user_id = $_SESSION['user_id'];
+
+/* UPDATE PROFILE */
+if (isset($_POST['update'])) {
+
+    $name = $_POST['name'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $bio = $_POST['bio'];
+    $diet = $_POST['dietary'];
+    $passward_hash = $_POST['passward_hash'];
+
+    if (!empty($passward_hash)) {
+
+        $sql = "UPDATE users SET 
+            name='$name',
+            username='$username',
+            email='$email',
+            bio='$bio',
+            dietary_prefs='$diet',
+            passward_hash='$passward_hash'
+            WHERE id='$user_id'";
+
+    } else {
+
+        $sql = "UPDATE users SET 
+            name='$name',
+            username='$username',
+            email='$email',
+            bio='$bio',
+            dietary_prefs='$diet'
+            WHERE id='$user_id'";
+    }
+
+    if (!$conn->query($sql)) {
+        die("Update Failed: " . $conn->error);
+    }
+}
+
+/* FETCH USER */
+$result = $conn->query("SELECT * FROM users WHERE id='$user_id'");
+
+if (!$result) {
+    die("Query Failed: " . $conn->error);
+}
+
+$user = $result->fetch_assoc();
+
+if (!$user) {
+    die("User not found");
+}
 ?>
 
 <!DOCTYPE html>
@@ -114,8 +179,6 @@ body
     font-weight:bold;
 }
 
-
-
 .right-section h3
 {
     margin-bottom:20px;
@@ -191,18 +254,16 @@ button:hover
 
 <div class="left-section">
 
-<img src="images/profile.jpeg" alt="Student profile">
+<img src="<?php echo $user['profile_pic'] ?: 'images/profile.jpeg'; ?>" alt="Profile">
 
-<h2>Amira</h2>
+<h2><?php echo $user['name']; ?></h2>
 
 <p>Home Cook</p>
 
 <div class="stats">
 
 <p>Bookmarks: 12</p>
-
 <p>Reviews: 8</p>
-
 <p>Meal Plans: 4</p>
 
 </div>
@@ -213,23 +274,23 @@ button:hover
 
 <h3>Profile Information</h3>
 
-<form>
+<form method="POST">
 
 <label>Full Name</label>
-<input type="text" value="Amira">
+<input type="text" name="name" value="<?php echo $user['name']; ?>">
 
 <label>Username</label>
-<input type="text" value="amira123">
+<input type="text" name="username" value="<?php echo $user['username']; ?>">
 
 <label>Email</label>
-<input type="email" value="amira@gmail.com">
+<input type="email" name="email" value="<?php echo $user['email']; ?>">
 
 <label>Bio</label>
-<textarea>I love cooking and trying new recipes.</textarea>
+<textarea name="bio"><?php echo $user['bio']; ?></textarea>
 
 <label>Dietary Preference</label>
-
-<select>
+<select name="dietary">
+<option><?php echo $user['dietary_prefs']; ?></option>
 <option>Vegetarian</option>
 <option>Vegan</option>
 <option>Keto</option>
@@ -237,9 +298,9 @@ button:hover
 </select>
 
 <label>Change Password</label>
-<input type="password" placeholder="Enter New Password">
+<input type="password" name="passward_hash" placeholder="Enter New Password">
 
-<button type="submit">Update Profile</button>
+<button type="submit" name="update">Update Profile</button>
 
 </form>
 
