@@ -14,6 +14,43 @@ if ($conn->connect_error) {
 }
 $user_id = $_SESSION['user_id'];
 
+if (isset($_POST['update'])) {
+ 
+    $name = $_POST['name'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $bio = $_POST['bio'];
+    $diet = $_POST['dietary'];
+    $passward_hash = $_POST['passward_hash'];
+ 
+    if (!empty($passward_hash)) {
+ 
+        $sql = "UPDATE users SET
+            name='$name',
+            username='$username',
+            email='$email',
+            bio='$bio',
+            dietary_prefs='$diet',
+            passward_hash='$passward_hash'
+            WHERE id='$user_id'";
+ 
+    } else {
+ 
+        $sql = "UPDATE users SET
+            name='$name',
+            username='$username',
+            email='$email',
+            bio='$bio',
+            dietary_prefs='$diet'
+            WHERE id='$user_id'";
+    }
+ 
+    if (!$conn->query($sql)) {
+        die("Update Failed: " . $conn->error);
+    }
+}
+ 
+
 
 <!DOCTYPE html>
 <html>
