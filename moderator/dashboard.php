@@ -6,63 +6,105 @@
     <style>
 
         body{
-            background-color: lavender;
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-            padding: 0;
+            margin:0;
+            font-family: Arial;
+            background-color:#FFF8F2;
+            color:#5A4636;
         }
 
-        h1{
-            color: white;
-            padding-top: 30px;
-            font-size: 40px;
+        .sidebar{
+            width:220px;
+            height:100vh;
+            background-color:#FFF4EC;
+            position:fixed;
+            left:0;
+            top:0;
+            padding-top:20px;
+            border-right:2px solid #dddddd;
         }
 
-        .header{
-            background-color: rgb(60, 88, 131);
-            text-align: center;
-            padding: 20px;
+        .logo{
+            text-align:center;
+            font-size:24px;
+            font-weight:bold;
+            margin-bottom:30px;
+        }
+
+        .sidebar a{
+            display:block;
+            padding:15px;
+            margin:10px;
+            text-decoration:none;
+            color:#5A4636;
+            border-radius:20px;
+        }
+
+        .sidebar a:hover{
+            background-color:#FFD6C9;
+        }
+
+        .active{
+            background-color:#FFD6C9;
         }
 
         .main{
-            margin-top: 40px;
-            text-align: center;
+            margin-left:240px;
+            padding:20px;
         }
 
-        .box{
-            background-color: white;
-            width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 20px;
-            padding: 20px;
-            border: 2px solid rgb(60, 88, 131);
+        .navbar{
+            background:white;
+            padding:15px;
+            border-radius:20px;
+            border:1px solid #dddddd;
         }
 
-        .box h2{
-            color: rgb(60, 88, 131);
+        .welcome{
+            margin-top:20px;
+            background-color:#FFD6C9;
+            padding:30px;
+            border-radius:25px;
+            color:#5A4636;
+            border:1px solid #dddddd;
         }
 
-        .menu{
-            background-color: wheat;
-            padding: 15px;
-            margin-top: 15px;
+        .cards{
+            margin-top:20px;
         }
 
-        .menu:hover{
-            background-color: rgb(214, 192, 151);
+        .card{
+            width:22%;
+            background:white;
+            display:inline-block;
+            margin-right:1%;
+            padding:20px;
+            border-radius:20px;
+            border:1px solid #dddddd;
+            vertical-align:top;
         }
 
-        a{
-            text-decoration: none;
-            color: black;
-            font-size: 18px;
-            font-weight: bold;
+        .purple{
+            background:#DCCCF5;
         }
 
-        p{
-            color: gray;
-            font-size: 16px;
+        .pink{
+            background:#FFD6C9;
+        }
+
+        .green{
+            background:#CFE8CF;
+        }
+
+        .yellow{
+            background:#FFE9A8;
+        }
+
+        .activity{
+            margin-top:20px;
+            background:white;
+            padding:20px;
+            border-radius:20px;
+            border:1px solid #dddddd;
         }
 
     </style>
@@ -71,55 +113,67 @@
 
 <body>
 
-    <div class="header">
+<div class="sidebar">
 
-        <h1>Moderator Dashboard</h1>
+    <div class="logo">🍰 RecipeShare</div>
 
-        <p style="color:white;">
-            Manage reports, chefs, cuisines and platform content
-        </p>
+    <a class="active" href="dashboard.php">🏠 Dashboard</a>
+    <a href="verification.php">👨‍🍳 Chef Requests</a>
+    <a href="reports.php">🚩 Reports</a>
+    <a href="recipes.php">🍲 Recipes</a>
+    <a href="profile.php">👤 Profile</a>
 
+</div>
+
+<div class="main">
+
+    <div class="navbar">
+        🌸 Welcome Moderator
     </div>
 
-    <div class="main">
+    <div class="welcome">
+        <h1>Moderator Dashboard</h1>
+        <p>Manage recipes, reports and chef requests easily.</p>
+    </div>
 
-        <div class="box">
+    <div class="cards">
 
-            <h2>Moderator Panel</h2>
+        <div class="card purple">
+            <h2></h2>
+            <p>🧁 Pending Requests</p>
+        </div>
 
-            <div class="menu">
-                <a href="verification.php">
-                    Chef Verification Requests
-                </a>
-            </div>
+        <div class="card pink">
+            <h2></h2>
+            <p>🚨 Reported Recipes</p>
+        </div>
 
-            <div class="menu">
-                <a href="reports.php">
-                    Content Reports
-                </a>
-            </div>
+        <div class="card green">
+            <h2></h2>
+            <p>⭐ Flagged Reviews</p>
+        </div>
 
-            <div class="menu">
-                <a href="cuisines.php">
-                    Manage Cuisines
-                </a>
-            </div>
-
-            <div class="menu">
-                <a href="diet_types.php">
-                    Manage Diet Types
-                </a>
-            </div>
-
-            <div class="menu">
-                <a href="quality_report.php">
-                    Content Quality Report
-                </a>
-            </div>
-
+        <div class="card yellow">
+            <h2></h2>
+            <p>🍲 New Recipes</p>
         </div>
 
     </div>
+
+    <div class="activity">
+
+        <h2>📝 Recent Activity</h2>
+
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+    </div>
+
+</div>
 
 </body>
 </html>
