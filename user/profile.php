@@ -49,6 +49,19 @@ if (isset($_POST['update'])) {
         die("Update Failed: " . $conn->error);
     }
 }
+
+$result = $conn->query("SELECT * FROM users WHERE id='$user_id'");
+ 
+if (!$result) {
+    die("Query Failed: " . $conn->error);
+}
+ 
+$user = $result->fetch_assoc();
+ 
+if (!$user) {
+    die("User not found");
+}
+?>
  
 
 
