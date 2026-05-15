@@ -291,7 +291,6 @@ button:hover
  
 
 
-
 <label>Dietary Preference</label>
 <select name="dietary">
 <option><?php echo $user['dietary_prefs']; ?></option>
