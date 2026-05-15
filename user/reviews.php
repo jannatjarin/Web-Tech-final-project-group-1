@@ -1,5 +1,4 @@
-
-<!-- bookmarks.php -->
+<
 <?php
 session_start();
 ?>
@@ -9,7 +8,7 @@ session_start();
 
 <head>
 
-<title>Bookmarks</title>
+<title>Reviews</title>
 
 <style>
 
@@ -57,38 +56,50 @@ body
     padding:20px;
 }
 
-.recipe-card
+.review-box
 {
     background-color:white;
+    padding:20px;
     border-radius:10px;
-    width:250px;
-    display:inline-block;
-    margin:15px;
-    padding:15px;
+    margin-bottom:20px;
 }
 
-.recipe-card img
+.review-box img
 {
-    width:100%;
-    height:180px;
+    width:150px;
+    height:100px;
     border-radius:10px;
+    object-fit:cover;
 }
 
-.recipe-card button
+textarea
 {
+    width:90%;
+    height:100px;
     padding:10px;
-    width:100%;
+    margin-top:10px;
+}
+
+button
+{
+    padding:10px 15px;
     background-color:#0b4d1c;
     color:white;
     border:none;
     border-radius:5px;
+    cursor:pointer;
+    margin-right:10px;
 }
 
-button:hover
+.delete-btn
 {
-    background-color:#146c2f;
+    background-color:#c0392b;
 }
 
+.edit-btn
+{
+    background-color:#2980b9;
+}
 
 </style>
 
@@ -113,60 +124,26 @@ button:hover
 
 <div class="main">
 
-<h2>Saved Recipes</h2>
+<h2>My Reviews</h2>
 
-<div class="recipe-card">
+<div class="review-box">
 
-<img src="images/pasta.jpeg">
+<img src="images/chiken.jpeg" alt="Food Image">
 
-<h3>Pasta</h3>
+<h3>Chicken Curry</h3>
 
-<p>Italian Cuisine</p>
+<p>Rating: 5 Stars</p>
 
-<button>Remove</button>
+<textarea>Very Delicious Recipe ,easy to make.my family loved it</textarea>
+
+<br><br>
+
+<button class="edit-btn">Edit Review</button>
+<button class="delete-btn">Delete Review</button>
 
 </div>
 
-<div class="recipe-card">
-
-<img src="images/barger.jpeg">
-
-<h3>Burger</h3>
-
-<p>Fast Food</p>
-
-<button>Remove</button>
 </div>
-
-
-<div class="recipe-card">
-
-<img src="images/pancake.jpeg">
-
-<h3>Pancake</h3>
-
-<p>Dessert</p>
-
-<button>Remove</button>
-</div>
-
-
-
-<div class="recipe-card">
-
-<img src="images/rice.jpeg">
-
-<h3>Rice</h3>
-
-<p>Chinese Cuisine</p>
-
-<button>Remove</button>
-</div>
-
-
-
-
-
 
 </body>
 

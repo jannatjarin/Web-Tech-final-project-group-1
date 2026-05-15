@@ -1,5 +1,4 @@
 
-<!-- bookmarks.php -->
 <?php
 session_start();
 ?>
@@ -9,7 +8,7 @@ session_start();
 
 <head>
 
-<title>Bookmarks</title>
+<title>Chefs</title>
 
 <style>
 
@@ -57,38 +56,32 @@ body
     padding:20px;
 }
 
-.recipe-card
+.chef-card
 {
     background-color:white;
-    border-radius:10px;
     width:250px;
+    padding:20px;
+    border-radius:10px;
     display:inline-block;
     margin:15px;
-    padding:15px;
+    text-align:center;
 }
 
-.recipe-card img
+.chef-card img
 {
-    width:100%;
-    height:180px;
-    border-radius:10px;
+    width:120px;
+    height:120px;
+    border-radius:50%;
 }
 
-.recipe-card button
+button
 {
-    padding:10px;
-    width:100%;
+    padding:10px 20px;
     background-color:#0b4d1c;
     color:white;
     border:none;
     border-radius:5px;
 }
-
-button:hover
-{
-    background-color:#146c2f;
-}
-
 
 </style>
 
@@ -113,55 +106,52 @@ button:hover
 
 <div class="main">
 
-<h2>Saved Recipes</h2>
+<h2>Followed Chefs</h2>
 
-<div class="recipe-card">
+<div class="chef-card">
 
-<img src="images/pasta.jpeg">
+<img src="images/chef1.jpeg">
 
-<h3>Pasta</h3>
+<h3>Chef Rahim</h3>
 
-<p>Italian Cuisine</p>
+<p>Italian Specialist</p>
 
-<button>Remove</button>
+<button>Following</button>
 
 </div>
 
-<div class="recipe-card">
+<div class="chef-card">
 
-<img src="images/barger.jpeg">
+<img src="images/chef2.jpeg">
 
-<h3>Burger</h3>
+<h3>Chef Karim</h3>
 
-<p>Fast Food</p>
+<p>Chiness Food Expert</p>
 
-<button>Remove</button>
-</div>
+<button>Following</button>
 
-
-<div class="recipe-card">
-
-<img src="images/pancake.jpeg">
-
-<h3>Pancake</h3>
-
-<p>Dessert</p>
-
-<button>Remove</button>
 </div>
 
 
 
-<div class="recipe-card">
 
-<img src="images/rice.jpeg">
+<div class="chef-card">
 
-<h3>Rice</h3>
+<img src="images/chef3.jpeg">
 
-<p>Chinese Cuisine</p>
+<h3>Chef Anila</h3>
 
-<button>Remove</button>
+<p>American Food Expert</p>
+
+<button>Following</button>
+
 </div>
+
+
+
+
+
+
 
 
 
