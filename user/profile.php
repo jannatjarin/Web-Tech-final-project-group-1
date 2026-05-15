@@ -251,6 +251,11 @@ button:hover
 
 <div class="left-section">
 
+<img src="<?php echo $user['profile_pic'] ?: 'images/profile.jpeg'; ?>" alt="Profile">
+ 
+<h2><?php echo $user['name']; ?></h2>
+ 
+
 
 <p>Home Cook</p>
 
