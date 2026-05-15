@@ -94,12 +94,15 @@ body
 {
     margin-top:20px;
     width :50% ;
+    
+     
    
 }
 
 .ingredients ul
 {
     padding-left:20px;
+     
     
 }
 
@@ -107,11 +110,15 @@ body
 {
     margin-right:20px;
     width :50% ;
+     
+    
+    
 }
 
 .steps ol
 {
     padding-left:20px;
+     
 }
 
 .nutrition
