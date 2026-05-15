@@ -276,6 +276,21 @@ button:hover
 <form method="POST">
 
 
+ 
+<label>Full Name</label>
+<input type="text" name="name" value="<?php echo $user['name']; ?>">
+ 
+<label>Username</label>
+<input type="text" name="username" value="<?php echo $user['username']; ?>">
+ 
+<label>Email</label>
+<input type="email" name="email" value="<?php echo $user['email']; ?>">
+ 
+<label>Bio</label>
+<textarea name="bio"><?php echo $user['bio']; ?></textarea>
+ 
+
+
 
 <label>Dietary Preference</label>
 <select name="dietary">
