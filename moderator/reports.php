@@ -93,6 +93,7 @@ button{
 <a href="dashboard.php">🏠 Dashboard</a>
 <a href="verification.php">👨‍🍳 Chef Requests</a>
 <a class="active" href="reports.php">🚩 Reports</a>
+<a href="review_report.php">📝 Review Reports</a>
 <a href="recipes.php">🍲 Recipes</a>
 
 </div>
