@@ -1,72 +1,18 @@
 <?php
 session_start();
 
-/* SESSION CHECK */
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-/* DATABASE CONNECTION (YOUR STYLE) */
 $conn = new mysqli("localhost", "root", "", "recipe_platform");
-
+ 
 if ($conn->connect_error) {
     die("Connection Failed: " . $conn->connect_error);
 }
 
-/* USER ID */
-$user_id = $_SESSION['user_id'];
-
-/* UPDATE PROFILE */
-if (isset($_POST['update'])) {
-
-    $name = $_POST['name'];
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $bio = $_POST['bio'];
-    $diet = $_POST['dietary'];
-    $passward_hash = $_POST['passward_hash'];
-
-    if (!empty($passward_hash)) {
-
-        $sql = "UPDATE users SET 
-            name='$name',
-            username='$username',
-            email='$email',
-            bio='$bio',
-            dietary_prefs='$diet',
-            passward_hash='$passward_hash'
-            WHERE id='$user_id'";
-
-    } else {
-
-        $sql = "UPDATE users SET 
-            name='$name',
-            username='$username',
-            email='$email',
-            bio='$bio',
-            dietary_prefs='$diet'
-            WHERE id='$user_id'";
-    }
-
-    if (!$conn->query($sql)) {
-        die("Update Failed: " . $conn->error);
-    }
-}
-
-/* FETCH USER */
-$result = $conn->query("SELECT * FROM users WHERE id='$user_id'");
-
-if (!$result) {
-    die("Query Failed: " . $conn->error);
-}
-
-$user = $result->fetch_assoc();
-
-if (!$user) {
-    die("User not found");
-}
-?>
 
 <!DOCTYPE html>
 <html>
@@ -254,9 +200,6 @@ button:hover
 
 <div class="left-section">
 
-<img src="<?php echo $user['profile_pic'] ?: 'images/profile.jpeg'; ?>" alt="Profile">
-
-<h2><?php echo $user['name']; ?></h2>
 
 <p>Home Cook</p>
 
@@ -276,17 +219,7 @@ button:hover
 
 <form method="POST">
 
-<label>Full Name</label>
-<input type="text" name="name" value="<?php echo $user['name']; ?>">
 
-<label>Username</label>
-<input type="text" name="username" value="<?php echo $user['username']; ?>">
-
-<label>Email</label>
-<input type="email" name="email" value="<?php echo $user['email']; ?>">
-
-<label>Bio</label>
-<textarea name="bio"><?php echo $user['bio']; ?></textarea>
 
 <label>Dietary Preference</label>
 <select name="dietary">
