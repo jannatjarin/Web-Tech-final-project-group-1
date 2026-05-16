@@ -1,4 +1,5 @@
 <?php
+session_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -152,15 +153,15 @@ button:hover
 
 <a href="dashboard.php">Dashboard</a>
 
-<a href="browse_recipes.php">Browse Recipes</a>
+<a href="recipes.php">Browse Recipes</a>
 
 <a href="bookmarks.php">Bookmarks</a>
 
 <a href="reviews.php">Reviews</a>
 
-<a href="shopping_lists.php">Shopping Lists</a>
+<a href="shoppinglist.php">Shopping Lists</a>
 
-<a href="meal_plan.php">Meal Plan</a>
+<a href="mealplan.php">Meal Plan</a>
 
 <a href="chefs.php">Chefs</a>
 
