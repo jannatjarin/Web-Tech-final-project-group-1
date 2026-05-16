@@ -25,7 +25,7 @@ $mealData = $meal->fetch_assoc();
 $shopping = $conn->query("SELECT COUNT(*) as total FROM shopping_lists WHERE user_id='$user_id'");
 $shoppingData = $shopping->fetch_assoc();
 
-$recipes = $conn->query("SELECT * FROM recipes LIMIT 4");
+$recipes = $conn->query("SELECT * FROM recipes LIMIT 3");
 ?>
 
 <!DOCTYPE html>
