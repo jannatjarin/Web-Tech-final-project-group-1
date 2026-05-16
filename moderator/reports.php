@@ -1,3 +1,18 @@
+<?php
+
+$conn = mysqli_connect("localhost","root","","recipe_platform");
+
+if(!$conn)
+{
+    die("Connection Failed");
+}
+
+$query = "SELECT * FROM content_reports";
+
+$result = mysqli_query($conn,$query);
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,10 +33,7 @@ body{
     height:100vh;
     background:#FFF4EC;
     position:fixed;
-    left:0;
-    top:0;
     padding-top:20px;
-    border-right:2px solid lightgray;
 }
 
 .sidebar a{
@@ -61,15 +73,12 @@ body{
     border:1px solid lightgray;
 }
 
-.high,.medium,.low{
-    border-left:8px solid transparent;
-}
-
 button{
     padding:10px 20px;
     border:none;
     border-radius:20px;
     margin-top:10px;
+    cursor:pointer;
 }
 
 .view{
@@ -93,6 +102,7 @@ button{
 <a href="dashboard.php">🏠 Dashboard</a>
 <a href="verification.php">👨‍🍳 Chef Requests</a>
 <a class="active" href="reports.php">🚩 Reports</a>
+<a href="review_report.php">📝 Review Reports</a>
 <a href="recipes.php">🍲 Recipes</a>
 
 </div>
@@ -101,16 +111,55 @@ button{
 
 <h1>🚨 Content Reports</h1>
 
+<?php
+
+while($row = mysqli_fetch_assoc($result))
+{
+
+?>
+
 <div class="report-card">
 
-<h2></h2>
-<p></p>
-<p></p>
+<h2>
+Report ID :
+<?php echo $row['id']; ?>
+</h2>
 
-<button class="view"></button>
-<button class="action"></button>
+<p>
+Reporter ID :
+<?php echo $row['reporter_id']; ?>
+</p>
+
+<p>
+Reason :
+<?php echo $row['reason']; ?>
+</p>
+
+<p>
+Entity Type :
+<?php echo $row['entity_type']; ?>
+</p>
+
+<p>
+Status :
+<?php echo $row['status']; ?>
+</p>
+
+<button class="view">
+View
+</button>
+
+<button class="action">
+Take Action
+</button>
 
 </div>
+
+<?php
+
+}
+
+?>
 
 </div>
 
