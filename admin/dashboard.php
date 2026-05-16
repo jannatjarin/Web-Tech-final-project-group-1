@@ -1,8 +1,18 @@
 <?php
 session_start();
 include("../config.php");
-?>
-<?php
+
+if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
+    header("Location: ../login.php");
+    exit();
+}
+
+
+$totalUsers = 0;
+$totalRecipes = 0;
+$totalReviews = 0;
+$totalChefs = 0;
+
 
 // Total Users
 $userQuery = $conn->query("SELECT COUNT(*) as total_users FROM users");
@@ -21,7 +31,7 @@ $reviewQuery = $conn->query("SELECT COUNT(*) as total_reviews FROM reviews");
 $reviewData = $reviewQuery->fetch_assoc();
 
 // Pending Chef Verification
-$verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM users WHERE chef_verified=0 AND role='chef'");
+$verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
 $verificationData = $verificationQuery->fetch_assoc();
 
 ?>
@@ -210,7 +220,7 @@ button:hover{
 
 <h1>Welcome Admin</h1>
 
-<p>Manage users, recipes, analytics and platform settings.</p>
+<p>Monitor platform activity, manage users, approve chefs and control content.</p>
 
 </div>
 
