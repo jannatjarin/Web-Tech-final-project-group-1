@@ -2,7 +2,8 @@
 session_start();
 include("../config.php");
 
-if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
+if(!isset($_SESSION['user_id']))
+{
     header("Location: ../login.php");
     exit();
 }
@@ -49,42 +50,45 @@ body{
     margin:0;
     padding:0;
     font-family:Arial;
-    background:#f4f4f4;
+    background:#eef1f5;
 }
 
 /* Sidebar */
 
 .sidebar{
-    width:230px;
+    width:220px;
     height:100vh;
-    background:#4b0000;
+    background:#2c2f4a;
     position:fixed;
     left:0;
     top:0;
 }
 
 .sidebar h2{
-    color:white;
+    color:#fff;
     text-align:center;
-    padding-top:20px;
+    padding:20px 0;
+    font-size:20px;
 }
 
 .sidebar a{
     display:block;
-    color:white;
+    color:#ddd;
     text-decoration:none;
-    padding:15px 20px;
+    padding:12px 20px;
+    font-size:14px;
 }
 
 .sidebar a:hover{
-    background:#700000;
+    background:#40446b;
+    color:#fff;
 }
 
-/* Main Section */
+/* Main */
 
 .main{
-    margin-left:230px;
-    padding:20px;
+    margin-left:220px;
+    padding:25px;
 }
 
 /* Topbar */
@@ -92,11 +96,8 @@ body{
 .topbar{
     background:white;
     padding:20px;
-    border-radius:10px;
-}
-
-.topbar h1{
-    margin:0;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
 }
 
 /* Cards */
@@ -106,43 +107,30 @@ body{
 }
 
 .card{
-    width:200px;
+    width:180px;
     display:inline-block;
-    margin-right:15px;
-    margin-bottom:15px;
-    padding:20px;
-    border-radius:10px;
+    margin:10px;
+    padding:18px;
+    border-radius:8px;
     color:white;
     text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
-.card1{
-    background:#0066cc;
-}
+.card1{ background:#5a67d8; }
+.card2{ background:#38a169; }
+.card3{ background:#dd6b20; }
+.card4{ background:#805ad5; }
+.card5{ background:#e53e3e; }
 
-.card2{
-    background:#009933;
-}
-
-.card3{
-    background:#cc6600;
-}
-
-.card4{
-    background:#990099;
-}
-
-.card5{
-    background:#cc0000;
-}
-
-/* Activity Section */
+/* Activity */
 
 .activity{
     background:white;
-    margin-top:30px;
+    margin-top:25px;
     padding:20px;
-    border-radius:10px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
 }
 
 .activity table{
@@ -150,22 +138,17 @@ body{
     border-collapse:collapse;
 }
 
-.activity table th,
-.activity table td{
-    border:1px solid #ddd;
-    padding:12px;
-    text-align:left;
-}
-
-.activity table th{
-    background:#f2f2f2;
+.activity th,
+.activity td{
+    padding:10px;
+    border-bottom:1px solid #eee;
 }
 
 /* Button */
 
 button{
-    padding:10px 15px;
-    background:#4b0000;
+    padding:8px 14px;
+    background:#2c2f4a;
     color:white;
     border:none;
     border-radius:5px;
@@ -173,7 +156,7 @@ button{
 }
 
 button:hover{
-    background:#700000;
+    background:#40446b;
 }
 
 </style>

@@ -1,69 +1,69 @@
 <?php
 session_start();
 
+$conn = new mysqli("localhost","root","","recipe_platform");
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+if($conn->connect_error)
+{
+    die("Connection Failed : ".$conn->connect_error);
 }
 
-$conn = new mysqli("localhost", "root", "", "recipe_platform");
- 
-if ($conn->connect_error) {
-    die("Connection Failed: " . $conn->connect_error);
-}
-$user_id = $_SESSION['user_id'];
 
-if (isset($_POST['update'])) {
- 
+$user_id = 1;
+
+
+if(isset($_POST['update']))
+{
     $name = $_POST['name'];
     $username = $_POST['username'];
     $email = $_POST['email'];
     $bio = $_POST['bio'];
-    $diet = $_POST['dietary'];
-    $passward_hash = $_POST['passward_hash'];
- 
-    if (!empty($passward_hash)) {
- 
-        $sql = "UPDATE users SET
-            name='$name',
-            username='$username',
-            email='$email',
-            bio='$bio',
-            dietary_prefs='$diet',
-            passward_hash='$passward_hash'
-            WHERE id='$user_id'";
- 
-    } else {
- 
-        $sql = "UPDATE users SET
-            name='$name',
-            username='$username',
-            email='$email',
-            bio='$bio',
-            dietary_prefs='$diet'
-            WHERE id='$user_id'";
+    $dietary = $_POST['dietary'];
+    $password_hash = $_POST['password_hash'];
+
+    if(!empty($password_hash))
+    {
+        $sql = "UPDATE users 
+                SET 
+                name='$name',
+                username='$username',
+                email='$email',
+                bio='$bio',
+                dietary_prefs='$dietary',
+                password_hash='$password_hash'
+                WHERE id='$user_id'";
     }
- 
-    if (!$conn->query($sql)) {
-        die("Update Failed: " . $conn->error);
+    else
+    {
+        $sql = "UPDATE users 
+                SET 
+                name='$name',
+                username='$username',
+                email='$email',
+                bio='$bio',
+                dietary_prefs='$dietary'
+                WHERE id='$user_id'";
     }
+
+    $conn->query($sql);
 }
+
 
 $result = $conn->query("SELECT * FROM users WHERE id='$user_id'");
- 
-if (!$result) {
-    die("Query Failed: " . $conn->error);
-}
- 
-$user = $result->fetch_assoc();
- 
-if (!$user) {
-    die("User not found");
-}
-?>
- 
 
+$user = $result->fetch_assoc();
+
+
+$bookmark = $conn->query("SELECT COUNT(*) as total FROM bookmarks WHERE user_id='$user_id'");
+$bookmarkData = $bookmark->fetch_assoc();
+
+$review = $conn->query("SELECT COUNT(*) as total FROM reviews WHERE user_id='$user_id'");
+$reviewData = $review->fetch_assoc();
+
+$meal = $conn->query("SELECT COUNT(*) as total FROM meal_plans WHERE user_id='$user_id'");
+$mealData = $meal->fetch_assoc();
+
+?>
 
 <!DOCTYPE html>
 <html>
@@ -176,6 +176,11 @@ body
     font-weight:bold;
 }
 
+.right-section
+{
+    width:600px;
+}
+
 .right-section h3
 {
     margin-bottom:20px;
@@ -186,7 +191,9 @@ label
     font-weight:bold;
 }
 
-input, textarea, select
+input,
+textarea,
+select
 {
     width:100%;
     padding:12px;
@@ -230,8 +237,7 @@ button:hover
 <h2>User Panel</h2>
 
 <a href="dashboard.php">Dashboard</a>
-<a href="browse_recipes.php">Browse Recipes</a>
-<a href="recipe_details.php">Recipe Details</a>
+<a href="recipes.php">Browse Recipes</a>
 <a href="bookmarks.php">Bookmarks</a>
 <a href="reviews.php">Reviews</a>
 <a href="shopping_lists.php">Shopping Lists</a>
@@ -251,19 +257,19 @@ button:hover
 
 <div class="left-section">
 
-<img src="<?php echo $user['profile_pic'] ?: 'images/profile.jpeg'; ?>" alt="Profile">
- 
-<h2><?php echo $user['name']; ?></h2>
- 
+<img src="<?php echo $user['profile_pic']; ?>">
 
+<h2><?php echo $user['name']; ?></h2>
 
 <p>Home Cook</p>
 
 <div class="stats">
 
-<p>Bookmarks: 12</p>
-<p>Reviews: 8</p>
-<p>Meal Plans: 4</p>
+<p>Bookmarks: <?php echo $bookmarkData['total']; ?></p>
+
+<p>Reviews: <?php echo $reviewData['total']; ?></p>
+
+<p>Meal Plans: <?php echo $mealData['total']; ?></p>
 
 </div>
 
@@ -275,33 +281,32 @@ button:hover
 
 <form method="POST">
 
-
- 
 <label>Full Name</label>
 <input type="text" name="name" value="<?php echo $user['name']; ?>">
- 
+
 <label>Username</label>
 <input type="text" name="username" value="<?php echo $user['username']; ?>">
- 
+
 <label>Email</label>
 <input type="email" name="email" value="<?php echo $user['email']; ?>">
- 
+
 <label>Bio</label>
 <textarea name="bio"><?php echo $user['bio']; ?></textarea>
- 
-
 
 <label>Dietary Preference</label>
+
 <select name="dietary">
-<option><?php echo $user['dietary_prefs']; ?></option>
-<option>Vegetarian</option>
-<option>Vegan</option>
-<option>Keto</option>
-<option>Halal</option>
+
+<option value="Vegetarian">Vegetarian</option>
+<option value="Vegan">Vegan</option>
+<option value="Keto">Keto</option>
+<option value="Halal">Halal</option>
+
 </select>
 
 <label>Change Password</label>
-<input type="password" name="passward_hash" placeholder="Enter New Password">
+
+<input type="password" name="password_hash" placeholder="Enter New Password">
 
 <button type="submit" name="update">Update Profile</button>
 

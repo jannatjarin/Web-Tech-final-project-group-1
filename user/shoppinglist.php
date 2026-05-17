@@ -120,7 +120,7 @@ a {
 <a href="bookmarks.php">Bookmarks</a>
 <a href="reviews.php">Reviews</a>
 <a href="shopping_lists.php">Shopping Lists</a>
-<a href="meal_plan.php">Meal Plan</a>
+<a href="mealplan.php">Meal Plan</a>
 <a href="chefs.php">Chefs</a>
 <a href="profile.php">Profile</a>
 
