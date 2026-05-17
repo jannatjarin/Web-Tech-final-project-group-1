@@ -24,8 +24,21 @@ if(isset($_POST['login']))
         $user = mysqli_fetch_assoc($result);
 
         $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
 
-        header("Location: profile.php");
+        if($user['role'] == 'admin')
+        {
+            header("Location: admin/dashboard.php");
+        }
+        elseif($user['role'] == 'moderator')
+        {
+            header("Location: moderator/dashboard.php");
+        }
+        else
+        {
+            header("Location: user/dashboard.php");
+        }
+
         exit();
     }
     else
