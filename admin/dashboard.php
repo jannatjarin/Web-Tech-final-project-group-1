@@ -1,27 +1,52 @@
 <?php
 session_start();
+
 include("../config.php");
+ 
+if(!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin")
 
-if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 {
+
     header("Location: ../login.php");
+
     exit();
+
 }
+ 
 
-$userQuery = $conn->query("SELECT COUNT(*) as total_users FROM users");
-$userData = $userQuery->fetch_assoc();
 
-$recipeQuery = $conn->query("SELECT COUNT(*) as total_recipes FROM recipes");
-$recipeData = $recipeQuery->fetch_assoc();
+$user_id = $_SESSION['user_id'];
 
-$chefQuery = $conn->query("SELECT COUNT(*) as total_chefs FROM users WHERE role='chef'");
-$chefData = $chefQuery->fetch_assoc();
 
-$reviewQuery = $conn->query("SELECT COUNT(*) as total_reviews FROM reviews");
-$reviewData = $reviewQuery->fetch_assoc();
+/* Total Users */
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_users FROM users");
+$stmt->execute();
+$userResult = $stmt->get_result();
+$userData = $userResult->fetch_assoc();
 
-$verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
-$verificationData = $verificationQuery->fetch_assoc()
+/* Total Recipes */
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_recipes FROM recipes");
+$stmt->execute();
+$recipeResult = $stmt->get_result();
+$recipeData = $recipeResult->fetch_assoc();
+
+/* Total Chefs */
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_chefs FROM users WHERE role='chef'");
+$stmt->execute();
+$chefResult = $stmt->get_result();
+$chefData = $chefResult->fetch_assoc();
+
+/* Total Reviews */
+$stmt = $conn->prepare("SELECT COUNT(*) AS total_reviews FROM reviews");
+$stmt->execute();
+$reviewResult = $stmt->get_result();
+$reviewData = $reviewResult->fetch_assoc();
+
+/* Pending Requests */
+$stmt = $conn->prepare("SELECT COUNT(*) AS pending_requests FROM chef_verification_requests WHERE status='pending'");
+$stmt->execute();
+$verificationResult = $stmt->get_result();
+$verificationData = $verificationResult->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
