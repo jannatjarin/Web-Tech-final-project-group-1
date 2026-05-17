@@ -1,19 +1,47 @@
 <?php
+session_start();
 
-$conn = mysqli_connect("localhost","root","","recipe_platform");
+include("../config.php");
+ 
+if(!isset($_SESSION["user_id"]) || $_SESSION["role"] != "moderator")
 
+{
+
+    header("Location: ../login.php");
+
+    exit();
+
+}
+ 
+
+
+$user_id = $_SESSION['user_id'];
+
+
+// User Data
+$user = mysqli_query($conn, "SELECT * FROM users WHERE id='$user_id'");
+$userData = mysqli_fetch_assoc($user);
+
+
+// Pending Chef Verification Requests
 $pending_query = "SELECT COUNT(*) AS total FROM chef_verification_requests WHERE status='pending'";
 $pending_result = mysqli_query($conn,$pending_query);
 $pending_data = mysqli_fetch_assoc($pending_result);
 
+
+// Reported Recipes
 $report_query = "SELECT COUNT(*) AS total FROM content_reports WHERE status='pending'";
 $report_result = mysqli_query($conn,$report_query);
 $report_data = mysqli_fetch_assoc($report_result);
 
+
+// Flagged Reviews
 $review_query = "SELECT COUNT(*) AS total FROM reviews";
 $review_result = mysqli_query($conn,$review_query);
 $review_data = mysqli_fetch_assoc($review_result);
 
+
+// New Recipes
 $recipe_query = "SELECT COUNT(*) AS total FROM recipes";
 $recipe_result = mysqli_query($conn,$recipe_query);
 $recipe_data = mysqli_fetch_assoc($recipe_result);
@@ -151,7 +179,7 @@ $recipe_data = mysqli_fetch_assoc($recipe_result);
 <div class="main">
 
     <div class="navbar">
-        🌸 Welcome Moderator
+        🌸 Welcome Moderator, <?php echo $userData['name']; ?>
     </div>
 
     <div class="welcome">
@@ -188,10 +216,10 @@ $recipe_data = mysqli_fetch_assoc($recipe_result);
         <h2>📝 Recent Activity</h2>
 
         <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
+            <li>New chef verification request submitted.</li>
+            <li>A recipe was reported by users.</li>
+            <li>Moderator reviewed flagged content.</li>
+            <li>New recipe published today.</li>
         </ul>
 
     </div>
