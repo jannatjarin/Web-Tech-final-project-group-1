@@ -6,17 +6,32 @@ include("../config.php");
 if(!isset($_SESSION['user_id']))
 {
     header("Location: ../login.php");
+    exit();
 }
 
-$user_id = $_SESSION['user_id'];
+if($_SESSION['role'] != 'moderator')
+{
+    header("Location: ../login.php");
+    exit();
+}
 
-$query = "
-SELECT *
-FROM recipes
-ORDER BY created_at DESC
-";
+$search = "";
 
-$result = mysqli_query($conn,$query);
+if(isset($_GET['search']) && $_GET['search'] != "")
+{
+    $search = $_GET['search'];
+
+    $result = mysqli_query($conn,
+    "SELECT * FROM recipes
+    WHERE title LIKE '%$search%'
+    ORDER BY created_at DESC");
+}
+else
+{
+    $result = mysqli_query($conn,
+    "SELECT * FROM recipes
+    ORDER BY created_at DESC");
+}
 
 ?>
 
@@ -31,37 +46,33 @@ $result = mysqli_query($conn,$query);
 
 body{
     margin:0;
+    padding:0;
     font-family:Arial;
-    background-color:#FFF8F2;
-    color:#5A4636;
+    background:#FFF8F2;
 }
 
 .sidebar{
-    width:220px;
+    width:230px;
     height:100vh;
-    background-color:#FFF4EC;
+    background:#FFEADD;
     position:fixed;
     left:0;
     top:0;
     padding-top:20px;
-    overflow-y:auto;
-    box-shadow:2px 0px 10px rgba(0,0,0,0.1);
 }
 
-.logo{
+.sidebar h2{
     text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:30px;
+    color:#5A4636;
 }
 
 .sidebar a{
     display:block;
-    padding:12px;
-    margin:8px;
+    padding:12px 20px;
     text-decoration:none;
     color:#5A4636;
-    border-radius:20px;
+    margin:8px;
+    border-radius:15px;
 }
 
 .sidebar a:hover{
@@ -73,44 +84,38 @@ body{
 }
 
 .main{
-    margin-left:240px;
+    margin-left:250px;
     padding:20px;
 }
 
 .card{
-    width:28%;
-    display:inline-block;
-    margin:10px;
     background:white;
-    padding:15px;
+    padding:20px;
     border-radius:20px;
-    box-shadow:0px 4px 10px rgba(0,0,0,0.08);
-    vertical-align:top;
+    margin-bottom:20px;
+    box-shadow:0px 2px 8px rgba(0,0,0,0.1);
 }
 
-.card img{
-    width:100%;
-    height:200px;
-    object-fit:cover;
+input[type=text]{
+    padding:10px;
+    width:300px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+button{
+    padding:10px 20px;
+    border:none;
     border-radius:15px;
-    margin-bottom:10px;
+    cursor:pointer;
 }
 
-.card h2{
-    margin-top:10px;
+.search-btn{
+    background:#FFD6C9;
 }
 
-.card p{
-    line-height:28px;
-}
-
-.status{
-    padding:6px 12px;
-    border-radius:15px;
-    display:inline-block;
-    font-size:14px;
-    margin-top:5px;
-    background:#FFE9A8;
+.view-btn{
+    background:#CFE8CF;
 }
 
 </style>
@@ -121,127 +126,146 @@ body{
 
 <div class="sidebar">
 
-    <div class="logo">🍰 RecipeShare</div>
+<h2>Moderator</h2>
 
-    <a href="dashboard.php">🏠 Dashboard</a>
-
-    <a href="verification.php">
-        👨‍🍳 Chef Verification
-    </a>
-
-    <a href="verification_details.php">
-        📋 Verification Details
-    </a>
-
-    <a href="reports.php">
-        🚩 Reports
-    </a>
-
-    <a href="review_report.php">
-        📝 Review Reports
-    </a>
-
-    <a class="active" href="recipes.php">
-        🍲 Recipes
-    </a>
-
-    <a href="recipe_details.php">
-        📖 Recipe Details
-    </a>
-
-    <a href="users.php">
-        👥 Users
-    </a>
-
-    <a href="cuisines.php">
-        🌍 Cuisines
-    </a>
-
-    <a href="diet_types.php">
-        🥗 Diet Types
-    </a>
-
-    <a href="moderation_logs.php">
-        📜 Moderation Logs
-    </a>
-
-    <a href="profile.php">
-        👤 Profile
-    </a>
+<a href="dashboard.php">Dashboard</a>
+<a href="verification.php">Chef Verification</a>
+<a href="recipes.php" class="active">Recipes</a>
+<a href="reports.php">Reports</a>
+<a href="review_report.php">Review Reports</a>
+<a href="cuisines.php">Cuisines</a>
+<a href="diet_types.php">Diet Types</a>
+<a href="profile.php">Profile</a>
+<a href="quality_report.php">Quality Report</a>
+<a href="warnings.php">Warnings</a>
+<a href="moderation_logs.php">Moderation Logs</a>
+<a href="../logout.php">Logout</a>
 
 </div>
 
 <div class="main">
 
-<h1>🍲 All Recipes</h1>
+<h1>All Recipes</h1>
 
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
+<form method="GET">
+
+<input
+type="text"
+name="search"
+placeholder="Search by recipe title..."
+value="<?php echo $search; ?>">
+
+<button
+type="submit"
+class="search-btn">
+Search
+</button>
+
+</form>
+
+<br><br>
+
+<?php
+
+if(mysqli_num_rows($result) > 0)
+{
+    while($row = mysqli_fetch_assoc($result))
+    {
+
+        $author_name = "Unknown User";
+
+        $author_id = $row['author_id'];
+
+        $author_query = mysqli_query($conn,
+        "SELECT * FROM users
+        WHERE id='$author_id'");
+
+        if($author_query && mysqli_num_rows($author_query) > 0)
+        {
+            $author = mysqli_fetch_assoc($author_query);
+            $author_name = $author['name'];
+        }
+
+        $cuisine_name = "Unknown";
+
+        $cuisine_id = $row['cuisine_id'];
+
+        $cuisine_query = mysqli_query($conn,
+        "SELECT * FROM cuisines
+        WHERE id='$cuisine_id'");
+
+        if($cuisine_query && mysqli_num_rows($cuisine_query) > 0)
+        {
+            $cuisine = mysqli_fetch_assoc($cuisine_query);
+            $cuisine_name = $cuisine['name'];
+        }
+
+        $diet_name = $row['diet_type'];
+
+?>
 
 <div class="card">
 
-    <img src="../<?php echo $row['featured_image_path']; ?>">
+<p>
+<b>Title:</b>
+<?php echo $row['title']; ?>
+</p>
 
-    <h2>
-        <?php echo $row['title']; ?>
-    </h2>
+<p>
+<b>Author:</b>
+<?php echo $author_name; ?>
+</p>
 
-    <p>
-        <b>Description:</b>
-        <?php echo $row['description']; ?>
-    </p>
+<p>
+<b>Cuisine:</b>
+<?php echo $cuisine_name; ?>
+</p>
 
-    <p>
-        <b>Cuisine ID:</b>
-        <?php echo $row['cuisine_id']; ?>
-    </p>
+<p>
+<b>Diet Type:</b>
+<?php echo $diet_name; ?>
+</p>
 
-    <p>
-        <b>Diet Type ID:</b>
-        <?php echo $row['diet_type_id']; ?>
-    </p>
+<p>
+<b>Status:</b>
+<?php echo $row['status']; ?>
+</p>
 
-    <p>
-        <b>Difficulty:</b>
-        <?php echo $row['difficulty']; ?>
-    </p>
+<p>
+<b>Views:</b>
+<?php echo $row['view_count']; ?>
+</p>
 
-    <p>
-        <b>Prep Time:</b>
-        <?php echo $row['prep_time_mins']; ?> mins
-    </p>
+<p>
+<b>Created:</b>
+<?php echo $row['created_at']; ?>
+</p>
 
-    <p>
-        <b>Cook Time:</b>
-        <?php echo $row['cook_time_mins']; ?> mins
-    </p>
+<form method="POST" action="recipe_details.php">
 
-    <p>
-        <b>Servings:</b>
-        <?php echo $row['servings']; ?>
-    </p>
+<input
+type="hidden"
+name="recipe_id"
+value="<?php echo $row['id']; ?>">
 
-    <p>
-        <b>Views:</b>
-        <?php echo $row['view_count']; ?>
-    </p>
+<button
+type="submit"
+class="view-btn">
+View Full Recipe
+</button>
 
-    <p>
-        <b>Chef Pick:</b>
-        <?php echo $row['is_chef_pick']; ?>
-    </p>
-
-    <p>
-        <b>Created At:</b>
-        <?php echo $row['created_at']; ?>
-    </p>
-
-    <div class="status">
-        <?php echo $row['status']; ?>
-    </div>
+</form>
 
 </div>
 
-<?php } ?>
+<?php
+    }
+}
+else
+{
+    echo "<div class='card'>No recipes found.</div>";
+}
+?>
 
 </div>
 

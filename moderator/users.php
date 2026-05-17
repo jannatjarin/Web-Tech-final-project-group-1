@@ -6,13 +6,98 @@ include("../config.php");
 if(!isset($_SESSION['user_id']))
 {
     header("Location: ../login.php");
+    exit();
 }
 
-$query = "
-SELECT *
-FROM users
-ORDER BY created_at DESC
-";
+if($_SESSION['role'] != 'moderator')
+{
+    header("Location: ../login.php");
+    exit();
+}
+
+
+
+if(isset($_POST['deactivate']))
+{
+    $user_id = $_POST['user_id'];
+
+    $update = "UPDATE users
+    SET is_active=0
+    WHERE id='$user_id'";
+
+    mysqli_query($conn,$update);
+
+    header("Location: users.php");
+    exit();
+}
+
+
+
+if(isset($_POST['activate']))
+{
+    $user_id = $_POST['user_id'];
+
+    $update = "UPDATE users
+    SET is_active=1
+    WHERE id='$user_id'";
+
+    mysqli_query($conn,$update);
+
+    header("Location: users.php");
+    exit();
+}
+
+
+
+if(isset($_POST['make_moderator']))
+{
+    $user_id = $_POST['user_id'];
+
+    $update = "UPDATE users
+    SET role='moderator'
+    WHERE id='$user_id'";
+
+    mysqli_query($conn,$update);
+
+    header("Location: users.php");
+    exit();
+}
+
+
+
+if(isset($_POST['remove_moderator']))
+{
+    $user_id = $_POST['user_id'];
+
+    $update = "UPDATE users
+    SET role='user'
+    WHERE id='$user_id'";
+
+    mysqli_query($conn,$update);
+
+    header("Location: users.php");
+    exit();
+}
+
+
+
+$search = "";
+
+if(isset($_GET['search']))
+{
+    $search = $_GET['search'];
+
+    $query = "SELECT * FROM users
+    WHERE name LIKE '%$search%'
+    OR username LIKE '%$search%'
+    OR email LIKE '%$search%'
+    ORDER BY created_at DESC";
+}
+else
+{
+    $query = "SELECT * FROM users
+    ORDER BY created_at DESC";
+}
 
 $result = mysqli_query($conn,$query);
 
@@ -20,7 +105,6 @@ $result = mysqli_query($conn,$query);
 
 <!DOCTYPE html>
 <html>
-
 <head>
 
 <title>Users</title>
@@ -29,37 +113,33 @@ $result = mysqli_query($conn,$query);
 
 body{
     margin:0;
+    padding:0;
     font-family:Arial;
     background:#FFF8F2;
-    color:#5A4636;
 }
 
 .sidebar{
-    width:220px;
+    width:230px;
     height:100vh;
-    background:#FFF4EC;
+    background:#FFEADD;
     position:fixed;
     left:0;
     top:0;
     padding-top:20px;
-    overflow-y:auto;
-    box-shadow:2px 0px 10px rgba(0,0,0,0.1);
 }
 
-.logo{
+.sidebar h2{
     text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    margin-bottom:30px;
+    color:#5A4636;
 }
 
 .sidebar a{
     display:block;
-    padding:12px;
-    margin:8px;
+    padding:12px 20px;
     text-decoration:none;
     color:#5A4636;
-    border-radius:20px;
+    margin:8px;
+    border-radius:15px;
 }
 
 .sidebar a:hover{
@@ -71,40 +151,47 @@ body{
 }
 
 .main{
-    margin-left:240px;
+    margin-left:250px;
     padding:20px;
 }
 
 .card{
     background:white;
     padding:20px;
-    margin-bottom:20px;
     border-radius:20px;
-    box-shadow:0px 4px 10px rgba(0,0,0,0.08);
+    margin-bottom:20px;
+    box-shadow:0px 2px 8px rgba(0,0,0,0.1);
 }
 
-.profile{
-    width:80px;
-    height:80px;
-    border-radius:50%;
-    object-fit:cover;
-    margin-bottom:10px;
-}
-
-.card h2{
-    margin-top:10px;
-}
-
-.card p{
-    line-height:28px;
-}
-
-.role{
-    display:inline-block;
-    padding:6px 14px;
+button{
+    border:none;
+    padding:8px 15px;
     border-radius:15px;
-    background:#DCCCF5;
-    margin-top:10px;
+    cursor:pointer;
+    margin:5px;
+}
+
+.deactivate{
+    background:#FFD6C9;
+}
+
+.activate{
+    background:#CFE8CF;
+}
+
+.moderator{
+    background:#D6E4FF;
+}
+
+.remove{
+    background:#FFE0E0;
+}
+
+input[type=text]{
+    padding:10px;
+    width:250px;
+    border-radius:15px;
+    border:1px solid #ccc;
 }
 
 </style>
@@ -115,96 +202,123 @@ body{
 
 <div class="sidebar">
 
-    <div class="logo">🍰 RecipeShare</div>
+<h2>Moderator</h2>
 
-    <a href="dashboard.php">
-        🏠 Dashboard
-    </a>
-
-    <a href="verification.php">
-        👨‍🍳 Chef Verification
-    </a>
-
-    <a href="verification_details.php">
-        📋 Verification Details
-    </a>
-
-    <a href="reports.php">
-        🚩 Reports
-    </a>
-
-    <a href="review_report.php">
-        📝 Review Reports
-    </a>
-
-    <a href="recipes.php">
-        🍲 Recipes
-    </a>
-
-    <a href="recipe_details.php">
-        📖 Recipe Details
-    </a>
-
-    <a class="active" href="users.php">
-        👥 Users
-    </a>
-
-    <a href="cuisines.php">
-        🌍 Cuisines
-    </a>
-
-    <a href="diet_types.php">
-        🥗 Diet Types
-    </a>
-
-    <a href="moderation_logs.php">
-        📜 Moderation Logs
-    </a>
-
-    <a href="profile.php">
-        👤 Profile
-    </a>
+<a href="dashboard.php">Dashboard</a>
+<a href="verification.php">Chef Verification</a>
+<a href="recipes.php">Recipes</a>
+<a href="reports.php">Reports</a>
+<a href="review_report.php">Review Reports</a>
+<a href="users.php" class="active">Users</a>
+<a href="cuisines.php">Cuisines</a>
+<a href="diet_types.php">Diet Types</a>
+<a href="profile.php">Profile</a>
+<a href="quality_report.php">Quality Report</a>
+<a href="warnings.php">Warnings</a>
+<a href="moderation_logs.php">Moderation Logs</a>
+<a href="../logout.php">Logout</a>
 
 </div>
+
+
 
 <div class="main">
 
-<h1>👥 Users</h1>
+<h1>Users Management</h1>
 
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
+
+
+<form method="GET">
+
+<input type="text"
+name="search"
+placeholder="Search users..."
+value="<?php echo $search; ?>">
+
+<button type="submit">
+Search
+</button>
+
+</form>
+
+
+
+<?php
+
+if(mysqli_num_rows($result) > 0)
+{
+    while($row = mysqli_fetch_assoc($result))
+    {
+?>
 
 <div class="card">
 
-    <img
-    src="../<?php echo $row['profile_pic']; ?>"
-    class="profile">
+<p><b>ID:</b> <?php echo $row['id']; ?></p>
+<p><b>Name:</b> <?php echo $row['name']; ?></p>
+<p><b>Username:</b> <?php echo $row['username']; ?></p>
+<p><b>Email:</b> <?php echo $row['email']; ?></p>
+<p><b>Role:</b> <?php echo $row['role']; ?></p>
+<p><b>Status:</b> <?php echo ($row['is_active'] == 1 ? "Active" : "Inactive"); ?></p>
+<p><b>Created:</b> <?php echo $row['created_at']; ?></p>
 
-    <h2>
-        <?php echo $row['name']; ?>
-    </h2>
 
-    <p>
-        <b>Email:</b>
-        <?php echo $row['email']; ?>
-    </p>
 
-    <p>
-        <b>Role:</b>
-        <?php echo $row['role']; ?>
-    </p>
+<form method="POST">
 
-    <p>
-        <b>Joined:</b>
-        <?php echo $row['created_at']; ?>
-    </p>
+<input type="hidden"
+name="user_id"
+value="<?php echo $row['id']; ?>">
 
-    <div class="role">
-        <?php echo $row['role']; ?>
-    </div>
+<?php if($row['is_active'] == 1) { ?>
+
+<button type="submit"
+name="deactivate"
+class="deactivate">
+Deactivate
+</button>
+
+<?php } else { ?>
+
+<button type="submit"
+name="activate"
+class="activate">
+Activate
+</button>
+
+<?php } ?>
+
+
+
+<?php if($row['role'] != 'moderator') { ?>
+
+<button type="submit"
+name="make_moderator"
+class="moderator">
+Make Moderator
+</button>
+
+<?php } else { ?>
+
+<button type="submit"
+name="remove_moderator"
+class="remove">
+Remove Moderator
+</button>
+
+<?php } ?>
+
+</form>
 
 </div>
 
-<?php } ?>
+<?php
+    }
+}
+else
+{
+    echo "<div class='card'>No users found.</div>";
+}
+?>
 
 </div>
 
