@@ -2,11 +2,11 @@
 session_start();
 include("../config.php");
 
-if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
+if(!isset($_SESSION['user_id']))
+{
     header("Location: ../login.php");
     exit();
 }
-
 
 $totalUsers = 0;
 $totalRecipes = 0;
@@ -14,23 +14,23 @@ $totalReviews = 0;
 $totalChefs = 0;
 
 
-// Total Users
+
 $userQuery = $conn->query("SELECT COUNT(*) as total_users FROM users");
 $userData = $userQuery->fetch_assoc();
 
-// Total Recipes
+
 $recipeQuery = $conn->query("SELECT COUNT(*) as total_recipes FROM recipes");
 $recipeData = $recipeQuery->fetch_assoc();
 
-// Total Chefs
+
 $chefQuery = $conn->query("SELECT COUNT(*) as total_chefs FROM users WHERE role='chef'");
 $chefData = $chefQuery->fetch_assoc();
 
-// Total Reviews
+
 $reviewQuery = $conn->query("SELECT COUNT(*) as total_reviews FROM reviews");
 $reviewData = $reviewQuery->fetch_assoc();
 
-// Pending Chef Verification
+
 $verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
 $verificationData = $verificationQuery->fetch_assoc();
 
@@ -49,54 +49,64 @@ body{
     margin:0;
     padding:0;
     font-family:Arial;
-    background:#f4f4f4;
+    background:#E8E4DE;
+    color:#3f3f3f;
 }
 
 /* Sidebar */
 
 .sidebar{
-    width:230px;
+    width:220px;
     height:100vh;
-    background:#4b0000;
+    background:#7E9C97;
     position:fixed;
     left:0;
     top:0;
 }
 
 .sidebar h2{
-    color:white;
+    color:#ffffff;
     text-align:center;
-    padding-top:20px;
+    padding:20px 0;
+    font-size:20px;
 }
 
 .sidebar a{
     display:block;
-    color:white;
+    color:#F5F1EC;
     text-decoration:none;
-    padding:15px 20px;
+    padding:12px 20px;
+    font-size:14px;
+    transition:0.3s;
 }
 
 .sidebar a:hover{
-    background:#700000;
+    background:#BFCFC1;
+    color:#384542;
 }
 
-/* Main Section */
+/* Main */
 
 .main{
-    margin-left:230px;
-    padding:20px;
+    margin-left:220px;
+    padding:25px;
 }
 
 /* Topbar */
 
 .topbar{
-    background:white;
+    background:#ffffff;
     padding:20px;
-    border-radius:10px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
 }
 
 .topbar h1{
-    margin:0;
+    color:#4E625E;
+}
+
+.topbar p{
+    color:#5f5f5f;
 }
 
 /* Cards */
@@ -106,43 +116,42 @@ body{
 }
 
 .card{
-    width:200px;
+    width:180px;
     display:inline-block;
-    margin-right:15px;
-    margin-bottom:15px;
-    padding:20px;
+    margin:10px;
+    padding:18px;
     border-radius:10px;
-    color:white;
+    color:#444444;
     text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    font-weight:bold;
 }
 
-.card1{
-    background:#0066cc;
-}
+.card1{ background:#BECFC0; }
 
-.card2{
-    background:#009933;
-}
+.card2{ background:#E3CFC7; }
 
-.card3{
-    background:#cc6600;
-}
+.card3{ background:#E8B2A7; }
 
-.card4{
-    background:#990099;
-}
+.card4{ background:#C6BBB0; }
 
 .card5{
-    background:#cc0000;
+    background:#7E9C97;
+    color:white;
 }
 
-/* Activity Section */
+/* Activity */
 
 .activity{
-    background:white;
-    margin-top:30px;
+    background:#ffffff;
+    margin-top:25px;
     padding:20px;
-    border-radius:10px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+}
+
+.activity h2{
+    color:#4E625E;
 }
 
 .activity table{
@@ -150,30 +159,33 @@ body{
     border-collapse:collapse;
 }
 
-.activity table th,
-.activity table td{
-    border:1px solid #ddd;
-    padding:12px;
-    text-align:left;
+.activity th,
+.activity td{
+    padding:10px;
+    border-bottom:1px solid #dddddd;
+    color:#444444;
 }
 
-.activity table th{
-    background:#f2f2f2;
+.activity th{
+    background:#E8E4DE;
+    color:#4E625E;
 }
 
 /* Button */
 
 button{
-    padding:10px 15px;
-    background:#4b0000;
+    padding:8px 14px;
+    background:#7E9C97;
     color:white;
     border:none;
     border-radius:5px;
     cursor:pointer;
+    transition:0.3s;
+    font-weight:bold;
 }
 
 button:hover{
-    background:#700000;
+    background:#667F7B;
 }
 
 </style>
