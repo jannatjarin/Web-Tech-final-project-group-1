@@ -2,8 +2,7 @@
 session_start();
 include("../config.php");
 
-if(!isset($_SESSION['user_id']))
-{
+if (!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin") {
     header("Location: ../login.php");
     exit();
 }
@@ -50,45 +49,42 @@ body{
     margin:0;
     padding:0;
     font-family:Arial;
-    background:#eef1f5;
+    background:#f4f4f4;
 }
 
 /* Sidebar */
 
 .sidebar{
-    width:220px;
+    width:230px;
     height:100vh;
-    background:#2c2f4a;
+    background:#4b0000;
     position:fixed;
     left:0;
     top:0;
 }
 
 .sidebar h2{
-    color:#fff;
+    color:white;
     text-align:center;
-    padding:20px 0;
-    font-size:20px;
+    padding-top:20px;
 }
 
 .sidebar a{
     display:block;
-    color:#ddd;
+    color:white;
     text-decoration:none;
-    padding:12px 20px;
-    font-size:14px;
+    padding:15px 20px;
 }
 
 .sidebar a:hover{
-    background:#40446b;
-    color:#fff;
+    background:#700000;
 }
 
-/* Main */
+/* Main Section */
 
 .main{
-    margin-left:220px;
-    padding:25px;
+    margin-left:230px;
+    padding:20px;
 }
 
 /* Topbar */
@@ -96,8 +92,11 @@ body{
 .topbar{
     background:white;
     padding:20px;
-    border-radius:8px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    border-radius:10px;
+}
+
+.topbar h1{
+    margin:0;
 }
 
 /* Cards */
@@ -107,30 +106,43 @@ body{
 }
 
 .card{
-    width:180px;
+    width:200px;
     display:inline-block;
-    margin:10px;
-    padding:18px;
-    border-radius:8px;
+    margin-right:15px;
+    margin-bottom:15px;
+    padding:20px;
+    border-radius:10px;
     color:white;
     text-align:center;
-    box-shadow:0 2px 6px rgba(0,0,0,0.08);
 }
 
-.card1{ background:#5a67d8; }
-.card2{ background:#38a169; }
-.card3{ background:#dd6b20; }
-.card4{ background:#805ad5; }
-.card5{ background:#e53e3e; }
+.card1{
+    background:#0066cc;
+}
 
-/* Activity */
+.card2{
+    background:#009933;
+}
+
+.card3{
+    background:#cc6600;
+}
+
+.card4{
+    background:#990099;
+}
+
+.card5{
+    background:#cc0000;
+}
+
+/* Activity Section */
 
 .activity{
     background:white;
-    margin-top:25px;
+    margin-top:30px;
     padding:20px;
-    border-radius:8px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+    border-radius:10px;
 }
 
 .activity table{
@@ -138,17 +150,22 @@ body{
     border-collapse:collapse;
 }
 
-.activity th,
-.activity td{
-    padding:10px;
-    border-bottom:1px solid #eee;
+.activity table th,
+.activity table td{
+    border:1px solid #ddd;
+    padding:12px;
+    text-align:left;
+}
+
+.activity table th{
+    background:#f2f2f2;
 }
 
 /* Button */
 
 button{
-    padding:8px 14px;
-    background:#2c2f4a;
+    padding:10px 15px;
+    background:#4b0000;
     color:white;
     border:none;
     border-radius:5px;
@@ -156,7 +173,7 @@ button{
 }
 
 button:hover{
-    background:#40446b;
+    background:#700000;
 }
 
 </style>
