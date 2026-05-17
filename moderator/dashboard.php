@@ -3,26 +3,20 @@ session_start();
 
 include("../config.php");
 
-
 if(!isset($_SESSION['user_id']))
 {
     header("Location: ../login.php");
+    exit();
+}
+
+if($_SESSION['role'] != 'moderator')
+{
+    header("Location: ../login.php");
+    exit();
 }
 
 
-$user_id = $_SESSION['user_id'];
 
-
-// Moderator Information
-$user_query = mysqli_query($conn,
-"SELECT * FROM users
-WHERE id='$user_id'");
-
-$userData = mysqli_fetch_assoc($user_query);
-
-
-
-// Pending Chef Requests
 $pending_query = mysqli_query($conn,
 "SELECT COUNT(*) AS total
 FROM chef_verification_requests
@@ -32,7 +26,7 @@ $pendingData = mysqli_fetch_assoc($pending_query);
 
 
 
-// Total Reports
+
 $report_query = mysqli_query($conn,
 "SELECT COUNT(*) AS total
 FROM content_reports
@@ -42,7 +36,7 @@ $reportData = mysqli_fetch_assoc($report_query);
 
 
 
-// Total Recipes
+
 $recipe_query = mysqli_query($conn,
 "SELECT COUNT(*) AS total
 FROM recipes");
@@ -51,152 +45,143 @@ $recipeData = mysqli_fetch_assoc($recipe_query);
 
 
 
-// Total Users
-$user_count_query = mysqli_query($conn,
+
+$user_query = mysqli_query($conn,
 "SELECT COUNT(*) AS total
 FROM users");
 
-$userCountData = mysqli_fetch_assoc($user_count_query);
+$userData = mysqli_fetch_assoc($user_query);
 
 
 
-// Total Reviews
+
 $review_query = mysqli_query($conn,
 "SELECT COUNT(*) AS total
 FROM reviews");
 
 $reviewData = mysqli_fetch_assoc($review_query);
 
+
+
+
+$flagged_review_query = mysqli_query($conn,
+"SELECT COUNT(*) AS total
+FROM content_reports
+WHERE entity_type='review'
+AND status='pending'");
+
+$flaggedReviewData = mysqli_fetch_assoc($flagged_review_query);
+
+
+
+
+$new_recipe_query = mysqli_query($conn,
+"SELECT COUNT(*) AS total
+FROM recipes
+WHERE DATE(created_at)=CURDATE()");
+
+$newRecipeData = mysqli_fetch_assoc($new_recipe_query);
+
 ?>
 
 <!DOCTYPE html>
 <html>
-
 <head>
 
-    <title>Moderator Dashboard</title>
+<title>Moderator Dashboard</title>
 
-    <style>
+<style>
 
-        body{
-            margin:0;
-            font-family: Arial;
-            background-color:#FFF8F2;
-            color:#5A4636;
-        }
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial;
+    background:#FFF8F2;
+}
 
-        .sidebar{
-            width:220px;
-            height:100vh;
-            background-color:#FFF4EC;
-            position:fixed;
-            left:0;
-            top:0;
-            padding-top:20px;
-            box-shadow:2px 0px 10px rgba(0,0,0,0.1);
-        }
+.sidebar{
+    width:230px;
+    height:100vh;
+    background:#FFEADD;
+    position:fixed;
+    left:0;
+    top:0;
+    padding-top:20px;
+}
 
-        .logo{
-            text-align:center;
-            font-size:24px;
-            font-weight:bold;
-            margin-bottom:30px;
-        }
+.sidebar h2{
+    text-align:center;
+    color:#5A4636;
+}
 
-        .sidebar a{
-            display:block;
-            padding:12px;
-            margin:8px;
-            text-decoration:none;
-            color:#5A4636;
-            border-radius:20px;
-        }
+.sidebar a{
+    display:block;
+    padding:12px 20px;
+    text-decoration:none;
+    color:#5A4636;
+    margin:8px;
+    border-radius:15px;
+}
 
-        .sidebar a:hover{
-            background-color:#FFD6C9;
-        }
+.sidebar a:hover{
+    background:#FFD6C9;
+}
 
-        .active{
-            background-color:#FFD6C9;
-        }
+.active{
+    background:#FFD6C9;
+}
 
-        .main{
-            margin-left:240px;
-            padding:20px;
-        }
+.main{
+    margin-left:250px;
+    padding:20px;
+}
 
-        .navbar{
-            background:white;
-            padding:15px;
-            border-radius:20px;
-            box-shadow:0px 4px 10px rgba(0,0,0,0.08);
-        }
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
 
-        .welcome{
-            margin-top:20px;
-            background:linear-gradient(to right,#FFD6C9,#F8C8DC);
-            padding:30px;
-            border-radius:25px;
-            color:#5A4636;
-        }
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0px 2px 8px rgba(0,0,0,0.1);
+}
 
-        .cards{
-            margin-top:20px;
-        }
+.card h2{
+    margin:0;
+    color:#5A4636;
+    font-size:20px;
+}
 
-        .card{
-            width:28%;
-            background:white;
-            display:inline-block;
-            margin-right:2%;
-            margin-bottom:20px;
-            padding:20px;
-            border-radius:20px;
-            box-shadow:0px 4px 10px rgba(0,0,0,0.08);
-            vertical-align:top;
-        }
+.card h1{
+    margin-top:15px;
+    color:#5A4636;
+    font-size:40px;
+}
 
-        .card:hover{
-            transform:scale(1.02);
-        }
+.pink{
+    background:#FFD6C9;
+}
 
-        .purple{
-            background:#DCCCF5;
-        }
+.green{
+    background:#CFE8CF;
+}
 
-        .pink{
-            background:#FFD6C9;
-        }
+.yellow{
+    background:#FFF0B5;
+}
 
-        .green{
-            background:#CFE8CF;
-        }
+.blue{
+    background:#D6E6FF;
+}
 
-        .yellow{
-            background:#FFE9A8;
-        }
+.orange{
+    background:#FFE0B2;
+}
 
-        .blue{
-            background:#CFE7FF;
-        }
-
-        .orange{
-            background:#FFD9B3;
-        }
-
-        .activity{
-            margin-top:20px;
-            background:white;
-            padding:20px;
-            border-radius:20px;
-            box-shadow:0px 4px 10px rgba(0,0,0,0.08);
-        }
-
-        ul{
-            line-height:35px;
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -204,171 +189,115 @@ $reviewData = mysqli_fetch_assoc($review_query);
 
 <div class="sidebar">
 
-    <div class="logo">🍰 RecipeShare</div>
+<h2>Moderator</h2>
 
-    <a class="active" href="dashboard.php">🏠 Dashboard</a>
-
-    <a href="verification.php">
-        👨‍🍳 Chef Verification
-    </a>
-
-    <a href="verification_details.php">
-        📋 Verification Details
-    </a>
-
-    <a href="reports.php">
-        🚩 Reports
-    </a>
-
-    <a href="review_report.php">
-        📝 Review Reports
-    </a>
-
-    <a href="recipes.php">
-        🍲 Recipes
-    </a>
-
-    <a href="recipe_details.php">
-        📖 Recipe Details
-    </a>
-
-    <a href="users.php">
-        👥 Users
-    </a>
-
-    <a href="cuisines.php">
-        🌍 Cuisines
-    </a>
-
-    <a href="diet_types.php">
-        🥗 Diet Types
-    </a>
-
-    <a href="moderation_logs.php">
-        📜 Moderation Logs
-    </a>
-
-    <a href="profile.php">
-        👤 Profile
-    </a>
+<a href="dashboard.php" class="active">Dashboard</a>
+<a href="verification.php">Chef Verification</a>
+<a href="recipes.php">Recipes</a>
+<a href="reports.php">Reports</a>
+<a href="review_report.php">Review Reports</a>
+<a href="cuisines.php">Cuisines</a>
+<a href="diet_types.php">Diet Types</a>
+<a href="profile.php">Profile</a>
+<a href="quality_report.php">Quality Report</a>
+<a href="warnings.php">Warnings</a>
+<a href="moderation_logs.php">Moderation Logs</a>
+<a href="../logout.php">Logout</a>
 
 </div>
 
+
+
 <div class="main">
 
-    <div class="navbar">
+<h1>Moderator Dashboard</h1>
 
-        🌸 Welcome Moderator,
-        <?php echo $userData['name']; ?>
+<div class="cards">
 
-    </div>
 
-    <div class="welcome">
+<div class="card pink">
 
-        <h1>🍓 Moderator Dashboard</h1>
+<h2>
+Pending Chef Requests
+</h2>
 
-        <p>
-            Manage recipes, reports,
-            users and chef requests easily.
-        </p>
+<h1>
+<?php echo $pendingData['total']; ?>
+</h1>
 
-    </div>
+</div>
 
-    <div class="cards">
 
-        <div class="card purple">
 
-            <h2>
-                <?php echo $pendingData['total']; ?>
-            </h2>
+<div class="card green">
 
-            <p>🧁 Pending Requests</p>
+<h2>
+Open Reports
+</h2>
 
-        </div>
+<h1>
+<?php echo $reportData['total']; ?>
+</h1>
 
-        <div class="card pink">
+</div>
 
-            <h2>
-                <?php echo $reportData['total']; ?>
-            </h2>
 
-            <p>🚨 Pending Reports</p>
 
-        </div>
+<div class="card blue">
 
-        <div class="card green">
+<h2>
+Total Recipes
+</h2>
 
-            <h2>
-                <?php echo $recipeData['total']; ?>
-            </h2>
+<h1>
+<?php echo $recipeData['total']; ?>
+</h1>
 
-            <p>🍲 Total Recipes</p>
+</div>
 
-        </div>
 
-        <div class="card yellow">
 
-            <h2>
-                <?php echo $reviewData['total']; ?>
-            </h2>
+<div class="card yellow">
 
-            <p>⭐ Total Reviews</p>
+<h2>
+Total Users
+</h2>
 
-        </div>
+<h1>
+<?php echo $userData['total']; ?>
+</h1>
 
-        <div class="card blue">
+</div>
 
-            <h2>
-                <?php echo $userCountData['total']; ?>
-            </h2>
 
-            <p>👥 Platform Users</p>
 
-        </div>
+<div class="card orange">
 
-        <div class="card orange">
+<h2>
+Total Reviews
+</h2>
 
-            <h2>Active</h2>
+<h1>
+<?php echo $reviewData['total']; ?>
+</h1>
 
-            <p>🛡️ Moderation Status</p>
+</div>
 
-        </div>
 
-    </div>
 
-    <div class="activity">
+<div class="card pink">
 
-        <h2>📝 Recent Activity</h2>
+<h2>
+Flagged Reviews
+</h2>
 
-        <ul>
+<h1>
+<?php echo $flaggedReviewData['total']; ?>
+</h1>
 
-            <li>
-                New chef verification request submitted.
-            </li>
+</div>
 
-            <li>
-                A recipe was reported by users.
-            </li>
-
-            <li>
-                Moderator reviewed flagged content.
-            </li>
-
-            <li>
-                New recipe published today.
-            </li>
-
-            <li>
-                User account status updated.
-            </li>
-
-            <li>
-                Cuisine category added successfully.
-            </li>
-
-        </ul>
-
-    </div>
+</div>
 
 </div>
 
