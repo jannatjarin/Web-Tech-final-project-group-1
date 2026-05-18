@@ -39,6 +39,22 @@ $chefData = $chefResult->fetch_assoc();
             padding:30px;
         }
 
+        .container{
+            padding:30px;
+        }
+
+        h1{
+            color:#6d4c4c;
+        }
+
+        .back{
+            text-decoration:none;
+            background:#c38d9e;
+            color:white;
+            padding:10px 15px;
+            border-radius:6px;
+        }
+
         table{
             width:100%;
             background:white;
@@ -54,12 +70,21 @@ $chefData = $chefResult->fetch_assoc();
         }
 
         table th{
-            background:#4b0000;
+            background:#c38d9e;
             color:white;
         }
 
         h1,h2{
             color:#4b0000;
+        }
+
+        button{
+            padding:7px 10px;
+            border:none;
+            color:white;
+            border-radius:5px;
+            cursor:pointer;
+            margin:2px;
         }
 
         .card{
@@ -73,7 +98,11 @@ $chefData = $chefResult->fetch_assoc();
 </head>
 <body>
 
-<a href="dashboard.php">Back Dashboard</a>
+<div class="container">
+
+<a href="dashboard.php" class="back">Back Dashboard</a>
+
+</div>
 
 <h1>Platform Analytics</h1>
 
