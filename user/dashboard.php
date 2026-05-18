@@ -1,189 +1,165 @@
 <?php
 session_start();
 
-include("../config.php");
- 
-if(!isset($_SESSION["user_id"]) || $_SESSION["role"] != "moderator")
 
+if(!isset($_SESSION['user_id']))
 {
-
-    header("Location: ../login.php");
-
+    header("Location: login.php");
     exit();
-
 }
- 
+
+
+$conn = new mysqli("localhost","root","","recipe_platform");
+
+if($conn->connect_error)
+{
+    die("Connection Failed : " . $conn->connect_error);
+}
 
 
 $user_id = $_SESSION['user_id'];
 
-
-// User Data
-$user = mysqli_query($conn, "SELECT * FROM users WHERE id='$user_id'");
-$userData = mysqli_fetch_assoc($user);
+$user = $conn->query("SELECT * FROM users WHERE id='$user_id'");
+$userData = $user->fetch_assoc();
 
 
-// Bookmark Count
-$bookmark = mysqli_query($conn, "SELECT COUNT(*) as total FROM bookmarks WHERE user_id='$user_id'");
-$bookmarkData = mysqli_fetch_assoc($bookmark);
+$bookmark = $conn->query("SELECT COUNT(*) as total FROM bookmarks WHERE user_id='$user_id'");
+$bookmarkData = $bookmark->fetch_assoc();
+
+$review = $conn->query("SELECT COUNT(*) as total FROM reviews WHERE user_id='$user_id'");
+$reviewData = $review->fetch_assoc();
+
+$meal = $conn->query("SELECT COUNT(*) as total FROM meal_plans WHERE user_id='$user_id'");
+$mealData = $meal->fetch_assoc();
+
+$shopping = $conn->query("SELECT COUNT(*) as total FROM shopping_lists WHERE user_id='$user_id'");
+$shoppingData = $shopping->fetch_assoc();
 
 
-// Review Count
-$review = mysqli_query($conn, "SELECT COUNT(*) as total FROM review WHERE user_id='$user_id'");
-$reviewData = mysqli_fetch_assoc($review);
-
-
-// Meal Plan Count
-$meal = mysqli_query($conn, "SELECT COUNT(*) as total FROM meal_plans WHERE user_id='$user_id'");
-$mealData = mysqli_fetch_assoc($meal);
-
-
-// Shopping List Count
-$shopping = mysqli_query($conn, "SELECT COUNT(*) as total FROM shopping_lists WHERE user_id='$user_id'");
-$shoppingData = mysqli_fetch_assoc($shopping);
-
-
-// Recipes
-$recipes = mysqli_query($conn, "SELECT * FROM recipes LIMIT 4");
-
+$recipes = $conn->query("SELECT * FROM recipes LIMIT 4");
 ?>
 
 <!DOCTYPE html>
 <html>
-
 <head>
 
-    <title>Dashboard</title>
+<title>Dashboard</title>
 
-    <style>
+<style>
 
-        body{
-            margin:0;
-            padding:0;
-            font-family:Arial;
-            background:#f5f5f5;
-        }
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial;
+    background:#f5f5f5;
+}
 
-        .sidebar{
-            width:220px;
-            height:100vh;
-            background:#0b4d1c;
-            position:fixed;
-            left:0;
-            top:0;
-            padding-top:20px;
-        }
+.sidebar{
+    width:220px;
+    height:100vh;
+    background:#0b4d1c;
+    position:fixed;
+    left:0;
+    top:0;
+    padding-top:20px;
+}
 
-        .sidebar h2{
-            color:white;
-            text-align:center;
-        }
+.sidebar h2{
+    color:white;
+    text-align:center;
+}
 
-        .sidebar a{
-            display:block;
-            color:white;
-            padding:15px;
-            text-decoration:none;
-        }
+.sidebar a{
+    display:block;
+    color:white;
+    padding:15px;
+    text-decoration:none;
+}
 
-        .sidebar a:hover{
-            background:#146c2e;
-        }
+.sidebar a:hover{
+    background:#146c2e;
+}
 
-        .main{
-            margin-left:220px;
-            padding:20px;
-        }
+.main{
+    margin-left:220px;
+    padding:20px;
+}
 
-        .topbar{
-            background:white;
-            padding:20px;
-            border-radius:10px;
-        }
+.topbar{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
 
-        .profile{
-            float:right;
-        }
+.profile{
+    float:right;
+}
 
-        .profile img{
-            width:40px;
-            height:40px;
-            border-radius:50%;
-        }
+.profile img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+}
 
-        .cards{
-            margin-top:20px;
-        }
+.cards{
+    margin-top:20px;
+}
 
-        .smallcard1,
-        .smallcard2,
-        .smallcard3,
-        .smallcard4{
-            width:180px;
-            display:inline-block;
-            margin-right:15px;
-            padding:20px;
-            border-radius:10px;
-            color:white;
-            text-align:center;
-        }
+.smallcard1,.smallcard2,.smallcard3,.smallcard4{
+    width:180px;
+    display:inline-block;
+    margin-right:15px;
+    padding:20px;
+    border-radius:10px;
+    color:white;
+    text-align:center;
+}
 
-        .smallcard1{
-            background:rgb(1,141,101);
-        }
+.smallcard1{background:rgb(1,141,101);}
+.smallcard2{background:rgb(141,1,113);}
+.smallcard3{background:rgb(1,108,141);}
+.smallcard4{background:rgb(141,85,1);}
 
-        .smallcard2{
-            background:rgb(141,1,113);
-        }
+.recipe-section{
+    margin-top:30px;
+}
 
-        .smallcard3{
-            background:rgb(1,108,141);
-        }
+.recipe-card{
+    width:250px;
+    background:white;
+    display:inline-block;
+    margin-right:20px;
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:20px;
+}
 
-        .smallcard4{
-            background:rgb(141,85,1);
-        }
+.recipe-card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
 
-        .recipe-section{
-            margin-top:30px;
-        }
+.recipe-card h3,
+.recipe-card p{
+    padding-left:10px;
+}
 
-        .recipe-card{
-            width:250px;
-            background:white;
-            display:inline-block;
-            margin-right:20px;
-            border-radius:10px;
-            overflow:hidden;
-            margin-bottom:20px;
-        }
+button{
+    margin:10px;
+    padding:10px 15px;
+    background:#0b4d1c;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
 
-        .recipe-card img{
-            width:100%;
-            height:180px;
-            object-fit:cover;
-        }
+button:hover{
+    background:#146c2e;
+}
 
-        .recipe-card h3,
-        .recipe-card p{
-            padding-left:10px;
-        }
-
-        button{
-            margin:10px;
-            padding:10px 15px;
-            background:#0b4d1c;
-            color:white;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
-        }
-
-        button:hover{
-            background:#146c2e;
-        }
-
-    </style>
+</style>
 
 </head>
 
@@ -216,9 +192,7 @@ $recipes = mysqli_query($conn, "SELECT * FROM recipes LIMIT 4");
             Welcome Back, <?php echo $userData['name']; ?>!
         </h1>
 
-        <p>
-            Discover, cook and share amazing recipes.
-        </p>
+        <p>Discover, cook and share amazing recipes.</p>
 
     </div>
 
@@ -250,7 +224,7 @@ $recipes = mysqli_query($conn, "SELECT * FROM recipes LIMIT 4");
 
         <h2>Recently Viewed Recipes</h2>
 
-        <?php while($row = mysqli_fetch_assoc($recipes)) { ?>
+        <?php while($row = $recipes->fetch_assoc()) { ?>
 
         <div class="recipe-card">
 
@@ -266,7 +240,8 @@ $recipes = mysqli_query($conn, "SELECT * FROM recipes LIMIT 4");
 
         </div>
 
-        <?php } ?>
+        <?php 
+        } ?>
 
     </div>
 
