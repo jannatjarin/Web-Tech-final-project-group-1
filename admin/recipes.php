@@ -10,36 +10,26 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 
 $search = "";
 
+/* SEARCH */
+
 if(isset($_GET['search']))
 {
     $search = $_GET['search'];
 
-    $searchValue = "%$search%";
-
-    $stmt = $conn->prepare("
+    $recipes = $conn->query("
     SELECT recipes.*, users.name
     FROM recipes
     JOIN users ON recipes.author_id = users.id
-    WHERE recipes.title LIKE ?
+    WHERE recipes.title LIKE '%$search%'
     ");
-
-    $stmt->bind_param("s", $searchValue);
-
-    $stmt->execute();
-
-    $recipes = $stmt->get_result();
 }
 else
 {
-    $stmt = $conn->prepare("
+    $recipes = $conn->query("
     SELECT recipes.*, users.name
     FROM recipes
     JOIN users ON recipes.author_id = users.id
     ");
-
-    $stmt->execute();
-
-    $recipes = $stmt->get_result();
 }
 
 /* DELETE RECIPE */
@@ -48,11 +38,10 @@ if(isset($_GET['delete']))
 {
     $id = $_GET['delete'];
 
-    $stmt = $conn->prepare("DELETE FROM recipes WHERE id=?");
-
-    $stmt->bind_param("i", $id);
-
-    $stmt->execute();
+    $conn->query("
+    DELETE FROM recipes
+    WHERE id='$id'
+    ");
 
     header("Location: recipes.php");
 }
@@ -63,15 +52,11 @@ if(isset($_GET['feature']))
 {
     $id = $_GET['feature'];
 
-    $stmt = $conn->prepare("
+    $conn->query("
     UPDATE recipes
     SET is_chef_pick = 1
-    WHERE id=?
+    WHERE id='$id'
     ");
-
-    $stmt->bind_param("i", $id);
-
-    $stmt->execute();
 
     header("Location: recipes.php");
 }

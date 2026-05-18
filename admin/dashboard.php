@@ -196,7 +196,7 @@ button:hover{
 
     <a href="dashboard.php">Dashboard</a>
     <a href="users.php">Manage Users</a>
-    <a href="repices.php">Manage Recipes</a>
+    <a href="recipes.php">Manage Recipes</a>
     <a href="analytics.php">Analytics</a>
     <a href="settings.php">Settings</a>
     <a href="../logout.php">Logout</a>
