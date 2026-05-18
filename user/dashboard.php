@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("../config.php");
 
 include("../config.php");
  
@@ -189,6 +190,7 @@ $recipes = mysqli_query($conn, "SELECT * FROM recipes LIMIT 4");
 
 <body>
 
+<!-- SIDEBAR -->
 <div class="sidebar">
 
     <h2>Recipe Platform</h2>
@@ -204,6 +206,7 @@ $recipes = mysqli_query($conn, "SELECT * FROM recipes LIMIT 4");
 
 </div>
 
+<!-- MAIN -->
 <div class="main">
 
     <div class="topbar">

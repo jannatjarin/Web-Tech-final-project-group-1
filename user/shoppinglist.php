@@ -1,43 +1,27 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['shopping_list'])) {
-    $_SESSION['shopping_list'] = [];
-}
 
 
-if (isset($_POST['add_item'])) {
-
-    $item = trim($_POST['item']);
-    $qty = trim($_POST['qty']);
-    $unit = trim($_POST['unit']);
-
-    if ($item != "") {
-        $_SESSION['shopping_list'][] = [
-            "item" => $item,
-            "qty" => $qty,
-            "unit" => $unit
-        ];
-    }
-}
-if (isset($_GET['delete'])) {
-    $index = $_GET['delete'];
-    unset($_SESSION['shopping_list'][$index]);
-    $_SESSION['shopping_list'] = array_values($_SESSION['shopping_list']);
-}
 ?>
 
-
 <!DOCTYPE html>
+
 <html>
+
 <head>
+
 <title>Shopping List</title>
 
 <style>
-body { margin:0; font-family:Arial; background:#f5f5f5; }
 
-
-
+body
+{
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+    background-color:#f5f5f5;
+}
 
 .sidebar
 {
@@ -54,6 +38,7 @@ body { margin:0; font-family:Arial; background:#f5f5f5; }
 {
     color:white;
     text-align:center;
+    margin-bottom:20px;
 }
 
 .sidebar a
@@ -69,42 +54,86 @@ body { margin:0; font-family:Arial; background:#f5f5f5; }
     background-color:#146c2f;
 }
 
-
-
-
-.main { margin-left:220px; padding:20px; }
-.list-box { background:white; padding:20px; border-radius:10px; }
-
-
-
-
-input {
-    padding:10px;
-    margin:5px;
+.main
+{
+    margin-left:220px;
+    padding:20px;
 }
 
-button {
+.list-box
+{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2
+{
+    color:#0b4d1c;
+}
+
+input
+{
+    padding:10px;
+    margin:5px;
+    width:180px;
+}
+
+button
+{
     padding:10px 20px;
-    background:#0b4d1c;
+    background-color:#0b4d1c;
     color:white;
     border:none;
     cursor:pointer;
 }
 
-table {
+button:hover
+{
+    background-color:#146c2f;
+}
+
+table
+{
     width:100%;
     margin-top:20px;
     border-collapse:collapse;
 }
 
-th, td {
-    border:1px solid #ccc;
-    padding:10px;
+table th
+{
+    background-color:#0b4d1c;
+    color:white;
 }
-a {
+
+table th,
+table td
+{
+    border:1px solid #ccc;
+    padding:12px;
+    text-align:center;
+}
+
+.delete-btn
+{
     color:red;
     text-decoration:none;
+    font-weight:bold;
 }
+
+.delete-btn:hover
+{
+    text-decoration:underline;
+}
+
+.empty
+{
+    text-align:center;
+    color:gray;
+    padding:20px;
+}
+
 </style>
 
 </head>
@@ -113,63 +142,76 @@ a {
 
 <div class="sidebar">
 
-<h2>User Panel</h2>
+    <h2>User Panel</h2>
 
-<a href="dashboard.php">Dashboard</a>
-<a href="browse_recipes.php">Browse Recipes</a>
-<a href="bookmarks.php">Bookmarks</a>
-<a href="reviews.php">Reviews</a>
-<a href="shopping_lists.php">Shopping Lists</a>
-<a href="mealplan.php">Meal Plan</a>
-<a href="chefs.php">Chefs</a>
-<a href="profile.php">Profile</a>
+    <a href="dashboard.php">Dashboard</a>
+
+    <a href="recipes.php">Browse Recipes</a>
+
+    <a href="savedbookmark.php">Bookmarked Recipes</a>
+
+    <a href="reviews.php">Reviews</a>
+
+    <a href="shoppinglist.php">Shopping Lists</a>
+
+    <a href="mealplan.php">Meal Plan</a>
+
+    <a href="chefs.php">Chefs</a>
+
+    <a href="profile.php">Profile</a>
 
 </div>
-
-
-
-
 
 <div class="main">
 
-<h2>Shopping List</h2>
+    <h2>Shopping List</h2>
 
-<div class="list-box">
+    <div class="list-box">
 
+        <form method="POST">
 
-<form method="POST">
-    <input type="text" name="item" placeholder="Item">
-    <input type="text" name="qty" placeholder="Quantity">
-    <input type="text" name="unit" placeholder="Unit">
-    <button type="submit" name="add_item">Add</button>
-</form>
+            <input
+                type="text"
+                name="item"
+                placeholder="Item Name"
+                required
+            >
 
+            <input
+                type="text"
+                name="qty"
+                placeholder="Quantity"
+            >
 
-<table>
-<tr>
-    <th>#</th>
-    <th>Item</th>
-    <th>Quantity</th>
-    <th>Unit</th>
-    <th>Action</th>
-</tr>
+            <input
+                type="text"
+                name="unit"
+                placeholder="Unit"
+            >
 
+            <button type="submit" name="add_item">
+                Add Item
+            </button>
 
-<?php foreach ($_SESSION['shopping_list'] as $i => $row) { ?>
-<tr>
-    <td><?php echo $i + 1; ?></td>
-    <td><?php echo htmlspecialchars($row['item']); ?></td>
-    <td><?php echo htmlspecialchars($row['qty']); ?></td>
-    <td><?php echo htmlspecialchars($row['unit']); ?></td>
-    <td><a href="?delete=<?php echo $i; ?>">Delete</a></td>
-</tr>
-<?php } ?>
+        </form>
 
-</table>
+        <table>
 
-</div>
+            <tr>
+                <th>#</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Action</th>
+            </tr>
+
+           
+           
+
+    </div>
 
 </div>
 
 </body>
+
 </html>
