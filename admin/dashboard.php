@@ -1,27 +1,42 @@
 <?php
 session_start();
+
 include("../config.php");
+ 
+if(!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin")
 
-if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 {
-    header("Location: ../login.php");
-    exit();
-}
 
+    header("Location: ../login.php");
+
+    exit();
+
+}
+ 
+
+
+$user_id = $_SESSION['user_id'];
+
+
+// Total Users
 $userQuery = $conn->query("SELECT COUNT(*) as total_users FROM users");
 $userData = $userQuery->fetch_assoc();
 
+// Total Recipes
 $recipeQuery = $conn->query("SELECT COUNT(*) as total_recipes FROM recipes");
 $recipeData = $recipeQuery->fetch_assoc();
 
+// Total Chefs
 $chefQuery = $conn->query("SELECT COUNT(*) as total_chefs FROM users WHERE role='chef'");
 $chefData = $chefQuery->fetch_assoc();
 
+// Total Reviews
 $reviewQuery = $conn->query("SELECT COUNT(*) as total_reviews FROM reviews");
 $reviewData = $reviewQuery->fetch_assoc();
 
+// Pending Chef Verification
 $verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
-$verificationData = $verificationQuery->fetch_assoc()
+$verificationData = $verificationQuery->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
