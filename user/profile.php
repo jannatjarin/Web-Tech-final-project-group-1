@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $conn = new mysqli("localhost","root","","recipe_platform");
 
 if($conn->connect_error)
@@ -9,7 +12,15 @@ if($conn->connect_error)
 }
 
 
-$user_id = 1;
+
+
+if(!isset($_SESSION['user_id']))
+{
+    header("Location: login.php");
+    exit();
+}
+
+$user_id = $_SESSION['user_id'];
 
 
 if(isset($_POST['update']))
@@ -19,24 +30,22 @@ if(isset($_POST['update']))
     $email = $_POST['email'];
     $bio = $_POST['bio'];
     $dietary = $_POST['dietary'];
-    $password_hash = $_POST['password_hash'];
+    $password = $_POST['password_hash'];
 
-    if(!empty($password_hash))
+    if(!empty($password))
     {
-        $sql = "UPDATE users 
-                SET 
+        $sql = "UPDATE users SET
                 name='$name',
                 username='$username',
                 email='$email',
                 bio='$bio',
                 dietary_prefs='$dietary',
-                password_hash='$password_hash'
+                password_hash='$password'
                 WHERE id='$user_id'";
     }
     else
     {
-        $sql = "UPDATE users 
-                SET 
+        $sql = "UPDATE users SET
                 name='$name',
                 username='$username',
                 email='$email',
@@ -51,6 +60,11 @@ if(isset($_POST['update']))
 
 $result = $conn->query("SELECT * FROM users WHERE id='$user_id'");
 
+if(!$result || $result->num_rows == 0)
+{
+    die("User not found");
+}
+
 $user = $result->fetch_assoc();
 
 
@@ -62,34 +76,28 @@ $reviewData = $review->fetch_assoc();
 
 $meal = $conn->query("SELECT COUNT(*) as total FROM meal_plans WHERE user_id='$user_id'");
 $mealData = $meal->fetch_assoc();
-
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-
 <title>Profile</title>
 
 <style>
-
 body
 {
     margin:0;
-    padding:0;
-    font-family:Arial, sans-serif;
-    background-color:#f4f4f4;
+    font-family:Arial;
+    background:#f4f4f4;
 }
 
 .sidebar
 {
     width:220px;
     height:100vh;
-    background-color:#0b4d1c;
+    background:#0b4d1c;
     position:fixed;
-    left:0;
-    top:0;
     padding-top:20px;
 }
 
@@ -97,20 +105,19 @@ body
 {
     color:white;
     text-align:center;
-    margin-bottom:30px;
 }
 
 .sidebar a
 {
     display:block;
     color:white;
-    padding:15px 20px;
+    padding:15px;
     text-decoration:none;
 }
 
 .sidebar a:hover
 {
-    background-color:#146c2f;
+    background:#146c2f;
 }
 
 .main
@@ -121,7 +128,7 @@ body
 
 .header
 {
-    background-color:white;
+    background:white;
     padding:20px;
     border-radius:10px;
     margin-bottom:20px;
@@ -129,9 +136,9 @@ body
 
 .profile-container
 {
-    background-color:white;
-    border-radius:10px;
+    background:white;
     padding:30px;
+    border-radius:10px;
     display:flex;
     gap:40px;
 }
@@ -151,29 +158,12 @@ body
     border:5px solid #0b4d1c;
 }
 
-.left-section h2
-{
-    margin-top:15px;
-    margin-bottom:5px;
-}
-
-.left-section p
-{
-    color:gray;
-}
-
 .stats
 {
     margin-top:20px;
-    background-color:#f5f5f5;
+    background:#f5f5f5;
     padding:15px;
     border-radius:10px;
-}
-
-.stats p
-{
-    margin:10px 0;
-    font-weight:bold;
 }
 
 .right-section
@@ -181,51 +171,21 @@ body
     width:600px;
 }
 
-.right-section h3
-{
-    margin-bottom:20px;
-}
-
-label
-{
-    font-weight:bold;
-}
-
-input,
-textarea,
-select
+input, textarea, select
 {
     width:100%;
     padding:12px;
-    margin-top:8px;
-    margin-bottom:20px;
-    border:1px solid #ccc;
-    border-radius:5px;
-    font-size:15px;
-}
-
-textarea
-{
-    height:100px;
-    resize:none;
+    margin-bottom:15px;
 }
 
 button
 {
-    padding:12px 25px;
-    background-color:#0b4d1c;
+    padding:12px 20px;
+    background:#0b4d1c;
     color:white;
     border:none;
-    border-radius:5px;
     cursor:pointer;
-    font-size:15px;
 }
-
-button:hover
-{
-    background-color:#146c2f;
-}
-
 </style>
 
 </head>
@@ -233,18 +193,15 @@ button:hover
 <body>
 
 <div class="sidebar">
-
 <h2>User Panel</h2>
-
 <a href="dashboard.php">Dashboard</a>
 <a href="recipes.php">Browse Recipes</a>
-<a href="bookmarks.php">Bookmarks</a>
+<a href="savedbookmark.php">Bookmarks</a>
 <a href="reviews.php">Reviews</a>
-<a href="shopping_lists.php">Shopping Lists</a>
-<a href="meal_plan.php">Meal Plan</a>
+<a href="shoppinglist.php">Shopping Lists</a>
+<a href="mealplan.php">Meal Plan</a>
 <a href="chefs.php">Chefs</a>
 <a href="profile.php">Profile</a>
-
 </div>
 
 <div class="main">
@@ -261,52 +218,38 @@ button:hover
 
 <h2><?php echo $user['name']; ?></h2>
 
-<p>Home Cook</p>
+<p><?php echo $user['role']; ?></p>
 
 <div class="stats">
-
 <p>Bookmarks: <?php echo $bookmarkData['total']; ?></p>
-
 <p>Reviews: <?php echo $reviewData['total']; ?></p>
-
 <p>Meal Plans: <?php echo $mealData['total']; ?></p>
-
 </div>
 
 </div>
 
 <div class="right-section">
 
-<h3>Profile Information</h3>
+<h3>Edit Profile</h3>
 
 <form method="POST">
 
-<label>Full Name</label>
 <input type="text" name="name" value="<?php echo $user['name']; ?>">
 
-<label>Username</label>
 <input type="text" name="username" value="<?php echo $user['username']; ?>">
 
-<label>Email</label>
 <input type="email" name="email" value="<?php echo $user['email']; ?>">
 
-<label>Bio</label>
 <textarea name="bio"><?php echo $user['bio']; ?></textarea>
 
-<label>Dietary Preference</label>
-
 <select name="dietary">
-
-<option value="Vegetarian">Vegetarian</option>
-<option value="Vegan">Vegan</option>
-<option value="Keto">Keto</option>
-<option value="Halal">Halal</option>
-
+<option value="Vegetarian" <?php if($user['dietary_prefs']=="Vegetarian") echo "selected"; ?>>Vegetarian</option>
+<option value="Vegan" <?php if($user['dietary_prefs']=="Vegan") echo "selected"; ?>>Vegan</option>
+<option value="Keto" <?php if($user['dietary_prefs']=="Keto") echo "selected"; ?>>Keto</option>
+<option value="Halal" <?php if($user['dietary_prefs']=="Halal") echo "selected"; ?>>Halal</option>
 </select>
 
-<label>Change Password</label>
-
-<input type="password" name="password_hash" placeholder="Enter New Password">
+<input type="password" name="password_hash" placeholder="New Password">
 
 <button type="submit" name="update">Update Profile</button>
 
@@ -319,5 +262,4 @@ button:hover
 </div>
 
 </body>
-
 </html>
