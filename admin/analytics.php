@@ -78,15 +78,6 @@ $chefData = $chefResult->fetch_assoc();
             color:#4b0000;
         }
 
-        button{
-            padding:7px 10px;
-            border:none;
-            color:white;
-            border-radius:5px;
-            cursor:pointer;
-            margin:2px;
-        }
-
         .card{
             background:white;
             padding:20px;

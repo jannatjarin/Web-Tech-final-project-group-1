@@ -18,17 +18,25 @@ if(!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin")
 $user_id = $_SESSION['user_id'];
 
 
-$totalUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users"));
+// Total Users
+$userQuery = $conn->query("SELECT COUNT(*) as total_users FROM users");
+$userData = $userQuery->fetch_assoc();
 
-$totalRecipes = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM recipes"));
+// Total Recipes
+$recipeQuery = $conn->query("SELECT COUNT(*) as total_recipes FROM recipes");
+$recipeData = $recipeQuery->fetch_assoc();
 
-$totalChefs = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE role='chef'"));
+// Total Chefs
+$chefQuery = $conn->query("SELECT COUNT(*) as total_chefs FROM users WHERE role='chef'");
+$chefData = $chefQuery->fetch_assoc();
 
-$totalReviews = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM reviews"));
+// Total Reviews
+$reviewQuery = $conn->query("SELECT COUNT(*) as total_reviews FROM reviews");
+$reviewData = $reviewQuery->fetch_assoc();
 
-$pendingChefs = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM chef_verification_requests WHERE status='pending'"));
-
-$newUsers = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)"));
+// Pending Chef Verification
+$verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
+$verificationData = $verificationQuery->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
