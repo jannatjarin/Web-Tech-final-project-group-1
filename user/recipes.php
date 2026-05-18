@@ -113,7 +113,7 @@ cursor:pointer;
 <h2>Recipe Platform</h2>
 <a href="dashboard.php">Dashboard</a>
 <a href="recipes.php">Browse Recipes</a>
-<a href="savedbookmark.php">Bookmarked Recipes</a>
+<a href="savedbookmarks.php">Bookmarked Recipes</a>
 <a href="reviews.php">Reviews</a>
 <a href="shoppinglist.php">Shopping Lists</a>
 <a href="mealplan.php">Meal Plan</a>
