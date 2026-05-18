@@ -1,6 +1,49 @@
-<
 <?php
 session_start();
+
+$conn = new mysqli("localhost","root","","recipe_platform");
+
+if($conn->connect_error)
+{
+    die("Connection Failed");
+}
+
+$user_id = $_SESSION['user_id'];
+
+
+if(isset($_POST['update_review']))
+{
+    $review_id = $_POST['review_id'];
+    $rating = $_POST['rating'];
+    $review_text = $_POST['review_text'];
+
+    $conn->query("
+    UPDATE reviews
+    SET rating='$rating',
+    review_text='$review_text'
+    WHERE id='$review_id'
+    ");
+}
+
+
+if(isset($_GET['delete']))
+{
+    $delete_id = $_GET['delete'];
+
+    $conn->query("
+    DELETE FROM reviews
+    WHERE id='$delete_id'
+    ");
+}
+
+
+$reviews = $conn->query("
+SELECT reviews.*, recipes.title, recipes.featured_image_path
+FROM reviews
+JOIN recipes
+ON reviews.recipe_id = recipes.id
+WHERE reviews.user_id='$user_id'
+");
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +123,13 @@ textarea
     margin-top:10px;
 }
 
+input
+{
+    padding:10px;
+    width:100px;
+    margin-top:10px;
+}
+
 button
 {
     padding:10px 15px;
@@ -113,7 +163,7 @@ button
 
 <a href="dashboard.php">Dashboard</a>
 <a href="recipes.php">Browse Recipes</a>
-<a href="bookmarks.php">Bookmarks</a>
+<a href="savedbookmark.php">Bookmarked Recipes</a>
 <a href="reviews.php">Reviews</a>
 <a href="shoppinglist.php">Shopping Lists</a>
 <a href="mealplan.php">Meal Plan</a>
@@ -126,22 +176,58 @@ button
 
 <h2>My Reviews</h2>
 
+<?php
+if($reviews->num_rows > 0)
+{
+    while($row = $reviews->fetch_assoc())
+    {
+?>
+
 <div class="review-box">
 
-<img src="images/chiken.jpeg" alt="Food Image">
+<img src="<?php echo $row['featured_image_path']; ?>" alt="Food Image">
 
-<h3>Chicken Curry</h3>
+<h3><?php echo $row['title']; ?></h3>
 
-<p>Rating: 5 Stars</p>
+<form method="POST">
 
-<textarea>Very Delicious Recipe ,easy to make.my family loved it</textarea>
+<input type="hidden" name="review_id" value="<?php echo $row['id']; ?>">
+
+<p>
+Rating:
+<input type="number" name="rating"
+value="<?php echo $row['rating']; ?>"
+min="1" max="5">
+</p>
+
+<textarea name="review_text"><?php echo $row['review_text']; ?></textarea>
 
 <br><br>
 
-<button class="edit-btn">Edit Review</button>
-<button class="delete-btn">Delete Review</button>
+<button type="submit" name="update_review" class="edit-btn">
+Edit Review
+</button>
+
+<a href="reviews.php?delete=<?php echo $row['id']; ?>">
+
+<button type="button" class="delete-btn">
+Delete Review
+</button>
+
+</a>
+
+</form>
 
 </div>
+
+<?php
+    }
+}
+else
+{
+    echo "<h3>No Reviews Found</h3>";
+}
+?>
 
 </div>
 
