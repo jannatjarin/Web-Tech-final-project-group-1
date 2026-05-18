@@ -30,6 +30,11 @@ if($action == "activate")
     $stmt = $conn->prepare("UPDATE users SET is_active = 1 WHERE id = ?");
     $stmt->bind_param("i", $id);
 }
+elseif($action == "delete")
+{
+    $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $id);
+}
 
 elseif($action == "deactivate")
 {
@@ -48,6 +53,7 @@ elseif($action == "remove_moderator")
     $stmt = $conn->prepare("UPDATE users SET role = 'user' WHERE id = ?");
     $stmt->bind_param("i", $id);
 }
+
 
 else
 {

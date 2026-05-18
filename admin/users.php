@@ -185,6 +185,9 @@ while($row = $result->fetch_assoc())
     </td>
 
     <td>
+        <button class="deactivate"
+        onclick="updateUser(<?php echo $row['id']; ?>,'delete')">
+        Delete</button>
 
         <button class="activate"
         onclick="updateUser(<?php echo $row['id']; ?>,'activate')">
