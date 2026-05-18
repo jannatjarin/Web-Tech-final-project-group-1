@@ -1,17 +1,20 @@
+
 <?php
 session_start();
+include("../config.php");
 
-$conn = new mysqli("localhost","root","","recipe_platform");
 
-if($conn->connect_error)
-{
-    die("Connection Failed");
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'user') {
+    header("Location: /login.php");
+    exit();
 }
 
-$user_id = 1;
+$user_id = $_SESSION['user_id'];
+
 
 $user = $conn->query("SELECT * FROM users WHERE id='$user_id'");
 $userData = $user->fetch_assoc();
+
 
 $bookmark = $conn->query("SELECT COUNT(*) as total FROM bookmarks WHERE user_id='$user_id'");
 $bookmarkData = $bookmark->fetch_assoc();
@@ -25,28 +28,25 @@ $mealData = $meal->fetch_assoc();
 $shopping = $conn->query("SELECT COUNT(*) as total FROM shopping_lists WHERE user_id='$user_id'");
 $shoppingData = $shopping->fetch_assoc();
 
-$recipes = $conn->query("SELECT * FROM recipes LIMIT 3");
+
+$recipes = $conn->query("SELECT * FROM recipes LIMIT 7");
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-
 <title>Dashboard</title>
 
 <style>
-
-body
-{
+body {
     margin:0;
     padding:0;
     font-family:Arial, sans-serif;
     background-color:#f5f5f5;
 }
 
-.sidebar
-{
+.sidebar {
     width:220px;
     height:100vh;
     background-color:#0b4d1c;
@@ -56,60 +56,48 @@ body
     padding-top:20px;
 }
 
-.sidebar h2
-{
+.sidebar h2 {
     color:white;
     text-align:center;
 }
 
-.sidebar a
-{
+.sidebar a {
     display:block;
     color:white;
     text-decoration:none;
     padding:15px 20px;
 }
 
-.sidebar a:hover
-{
+.sidebar a:hover {
     background-color:#146c2e;
 }
 
-.main
-{
+.main {
     margin-left:220px;
     padding:20px;
 }
 
-.topbar
-{
+.topbar {
     background-color:white;
     padding:20px;
     border-radius:10px;
 }
 
-.profile
-{
+.profile {
     float:right;
 }
 
-.profile img
-{
+.profile img {
     width:40px;
     height:40px;
     border-radius:50%;
 }
 
-.cards
-{
+.cards {
     margin-top:20px;
 }
 
-.smallcard1,
-.smallcard2,
-.smallcard3,
-.smallcard4
-{
+.smallcard1, .smallcard2, .smallcard3, .smallcard4 {
     width:180px;
     display:inline-block;
     margin-right:15px;
@@ -119,33 +107,16 @@ body
     color:white;
 }
 
-.smallcard1
-{
-    background-color:rgb(1, 141, 101);
-}
+.smallcard1 { background-color:rgb(1, 141, 101); }
+.smallcard2 { background-color:rgb(141, 1, 113); }
+.smallcard3 { background-color:rgb(1, 108, 141); }
+.smallcard4 { background-color:rgb(141, 85, 1); }
 
-.smallcard2
-{
-    background-color:rgb(141, 1, 113);
-}
-
-.smallcard3
-{
-    background-color:rgb(1, 108, 141);
-}
-
-.smallcard4
-{
-    background-color:rgb(141, 85, 1);
-}
-
-.recipe-section
-{
+.recipe-section {
     margin-top:30px;
 }
 
-.recipe-card
-{
+.recipe-card {
     width:250px;
     background:white;
     display:inline-block;
@@ -155,20 +126,16 @@ body
     margin-bottom:20px;
 }
 
-.recipe-card img
-{
+.recipe-card img {
     width:100%;
     height:180px;
 }
 
-.recipe-card h3,
-.recipe-card p
-{
+.recipe-card h3, .recipe-card p {
     padding-left:10px;
 }
 
-button
-{
+button {
     margin:10px;
     padding:10px 15px;
     background-color:#0b4d1c;
@@ -177,7 +144,6 @@ button
     border-radius:5px;
     cursor:pointer;
 }
-
 </style>
 
 </head>
@@ -190,7 +156,7 @@ button
 
 <a href="dashboard.php">Dashboard</a>
 <a href="recipes.php">Browse Recipes</a>
-<a href="bookmarks.php">Bookmarks</a>
+<a href="savedbookmark.php">Bookmarked Recipes</a>
 <a href="reviews.php">Reviews</a>
 <a href="shoppinglist.php">Shopping Lists</a>
 <a href="mealplan.php">Meal Plan</a>
@@ -204,13 +170,10 @@ button
 <div class="topbar">
 
 <div class="profile">
-
 <img src="<?php echo $userData['profile_pic']; ?>">
-
 </div>
 
 <h1>Welcome Back, <?php echo $userData['name']; ?>!</h1>
-
 <p>Discover, cook and share amazing recipes.</p>
 
 </div>
@@ -218,35 +181,23 @@ button
 <div class="cards">
 
 <div class="smallcard1">
-
 <h1><?php echo $bookmarkData['total']; ?></h1>
-
 <p>Bookmarked Recipes</p>
-
 </div>
 
 <div class="smallcard2">
-
 <h1><?php echo $reviewData['total']; ?></h1>
-
 <p>Reviews Written</p>
-
 </div>
 
 <div class="smallcard3">
-
 <h1><?php echo $mealData['total']; ?></h1>
-
 <p>Meal Plans</p>
-
 </div>
 
 <div class="smallcard4">
-
 <h1><?php echo $shoppingData['total']; ?></h1>
-
 <p>Shopping Lists</p>
-
 </div>
 
 </div>
@@ -255,10 +206,7 @@ button
 
 <h2>Recipes</h2>
 
-<?php
-while($row = $recipes->fetch_assoc())
-{
-?>
+<?php while($row = $recipes->fetch_assoc()) { ?>
 
 <div class="recipe-card">
 
@@ -269,21 +217,16 @@ while($row = $recipes->fetch_assoc())
 <p><?php echo $row['difficulty']; ?></p>
 
 <a href="recipes_details.php?id=<?php echo $row['id']; ?>">
-
 <button>View Recipe</button>
-
 </a>
 
 </div>
 
-<?php
-}
-?>
+<?php } ?>
 
 </div>
 
 </div>
 
 </body>
-
 </html>

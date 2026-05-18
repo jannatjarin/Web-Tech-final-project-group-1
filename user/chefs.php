@@ -105,6 +105,7 @@ button
 </div>
 
 <div class="main">
+    
 
 <h2>Followed Chefs</h2>
 
