@@ -196,6 +196,7 @@ button:hover{
 
     <a href="dashboard.php">Dashboard</a>
     <a href="users.php">Manage Users</a>
+    <a href="repices.php">Manage Recipes</a>
     <a href="analytics.php">Analytics</a>
     <a href="settings.php">Settings</a>
     <a href="../logout.php">Logout</a>
@@ -235,7 +236,7 @@ button:hover{
             <h3>Pending Requests</h3>
             <h1><?php echo $verificationData['pending_requests']; ?></h1>
         </div>
-        
+
         <div class="card card1">
             <h3>New Registrations</h3>
             <h1><?php echo $newUserData['new_users']; ?></h1>
