@@ -9,24 +9,17 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 }
 
 $search = "";
-
+ 
 if(isset($_GET['search']))
 {
     $search = $_GET['search'];
-
-    $searchValue = "%$search%";
-
-    $stmt = $conn->prepare("SELECT id,name,username,email,role,is_active FROM users WHERE name LIKE ? OR email LIKE ? OR username LIKE ?");
-
-    $stmt->bind_param("sss", $searchValue, $searchValue, $searchValue);
-
-    $stmt->execute();
-
-    $result = $stmt->get_result();
+ 
+    $recipes = $conn->query("SELECT * FROM recipes
+    WHERE title LIKE '%$search%'");
 }
 else
 {
-    $result = $conn->query("SELECT id,name,username,email,role,is_active FROM users");
+    $recipes = $conn->query("SELECT * FROM recipes");
 }
 ?>
 
