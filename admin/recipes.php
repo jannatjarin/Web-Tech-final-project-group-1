@@ -10,7 +10,6 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 
 $search = "";
 
-/* SEARCH */
 
 if(isset($_GET['search']))
 {
@@ -32,7 +31,6 @@ else
     ");
 }
 
-/* DELETE RECIPE */
 
 if(isset($_GET['delete']))
 {
@@ -46,7 +44,6 @@ if(isset($_GET['delete']))
     header("Location: recipes.php");
 }
 
-/* FEATURE RECIPE */
 
 if(isset($_GET['feature']))
 {
