@@ -13,28 +13,21 @@ if(!isset($_SESSION["user_id"]) || $_SESSION["role"] != "admin")
 
 }
  
-
-
 $user_id = $_SESSION['user_id'];
 
 
-// Total Users
 $userQuery = $conn->query("SELECT COUNT(*) as total_users FROM users");
 $userData = $userQuery->fetch_assoc();
 
-// Total Recipes
 $recipeQuery = $conn->query("SELECT COUNT(*) as total_recipes FROM recipes");
 $recipeData = $recipeQuery->fetch_assoc();
 
-// Total Chefs
 $chefQuery = $conn->query("SELECT COUNT(*) as total_chefs FROM users WHERE role='chef'");
 $chefData = $chefQuery->fetch_assoc();
 
-// Total Reviews
 $reviewQuery = $conn->query("SELECT COUNT(*) as total_reviews FROM reviews");
 $reviewData = $reviewQuery->fetch_assoc();
 
-// Pending Chef Verification
 $verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
 $verificationData = $verificationQuery->fetch_assoc();
 
