@@ -194,7 +194,6 @@ button{
 <a href="diet_types.php">Diet Types</a>
 <a href="profile.php">Profile</a>
 <a href="quality_report.php">Quality Report</a>
-<a href="warnings.php">Warnings</a>
 <a href="moderation_logs.php">Moderation Logs</a>
 <a href="../logout.php">Logout</a>
 
