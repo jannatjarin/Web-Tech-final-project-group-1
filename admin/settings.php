@@ -12,7 +12,6 @@ $user_id = $_SESSION['user_id'];
 
 $message = "";
 
-/* UPDATE SETTINGS */
 
 if(isset($_POST['update']))
 {
@@ -21,7 +20,6 @@ if(isset($_POST['update']))
     $bio = $_POST['bio'];
     $password = $_POST['password'];
 
-    /* UPDATE WITHOUT PASSWORD */
 
     if($password == "")
     {
@@ -43,7 +41,6 @@ if(isset($_POST['update']))
         }
     }
 
-    /* UPDATE WITH PASSWORD */
 
     else
     {
@@ -69,7 +66,6 @@ if(isset($_POST['update']))
     }
 }
 
-/* FETCH ADMIN DATA */
 
 $query = "
 SELECT name,email,bio
