@@ -9,17 +9,25 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != 'admin')
 }
 
 $search = "";
- 
+
 if(isset($_GET['search']))
 {
     $search = $_GET['search'];
- 
-    $recipes = $conn->query("SELECT * FROM recipes
-    WHERE title LIKE '%$search%'");
+
+    $result = $conn->query("
+    SELECT id,name,username,email,role,is_active 
+    FROM users 
+    WHERE name LIKE '%$search%' 
+    OR email LIKE '%$search%' 
+    OR username LIKE '%$search%'
+    ");
 }
 else
 {
-    $recipes = $conn->query("SELECT * FROM recipes");
+    $result = $conn->query("
+    SELECT id,name,username,email,role,is_active 
+    FROM users
+    ");
 }
 ?>
 
