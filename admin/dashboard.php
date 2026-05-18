@@ -37,6 +37,9 @@ $reviewData = $reviewQuery->fetch_assoc();
 // Pending Chef Verification
 $verificationQuery = $conn->query("SELECT COUNT(*) as pending_requests FROM chef_verification_requests WHERE status='pending'");
 $verificationData = $verificationQuery->fetch_assoc();
+
+$newUserQuery = $conn->query("SELECT COUNT(*) as new_users FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)");
+$newUserData = $newUserQuery->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -193,6 +196,7 @@ button:hover{
 
     <a href="dashboard.php">Dashboard</a>
     <a href="users.php">Manage Users</a>
+    <a href="recipes.php">Manage Recipes</a>
     <a href="analytics.php">Analytics</a>
     <a href="settings.php">Settings</a>
     <a href="../logout.php">Logout</a>
@@ -231,6 +235,11 @@ button:hover{
         <div class="card card5">
             <h3>Pending Requests</h3>
             <h1><?php echo $verificationData['pending_requests']; ?></h1>
+        </div>
+
+        <div class="card card1">
+            <h3>New Registrations</h3>
+            <h1><?php echo $newUserData['new_users']; ?></h1>
         </div>
 
     </div>
