@@ -12,70 +12,39 @@ $user_id = $_SESSION['user_id'];
 
 $message = "";
 
+/* UPDATE SETTINGS */
 
 if(isset($_POST['update']))
 {
     $name = $_POST['name'];
     $email = $_POST['email'];
     $bio = $_POST['bio'];
-    $password = $_POST['password'];
 
+    $stmt = $conn->prepare("UPDATE users SET name=?, email=?, bio=? WHERE id=?");
 
-    if($password == "")
+    $stmt->bind_param("sssi", $name, $email, $bio, $user_id);
+
+    if($stmt->execute())
     {
-        $query = "
-        UPDATE users
-        SET name='$name',
-        email='$email',
-        bio='$bio'
-        WHERE id='$user_id'
-        ";
-
-        if(mysqli_query($conn, $query))
-        {
-            $message = "Settings Updated Successfully";
-        }
-        else
-        {
-            $message = "Update Failed";
-        }
+        $message = "Settings Updated Successfully";
     }
-
-
     else
     {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        $query = "
-        UPDATE users
-        SET name='$name',
-        email='$email',
-        bio='$bio',
-        password_hash='$hashed_password'
-        WHERE id='$user_id'
-        ";
-
-        if(mysqli_query($conn, $query))
-        {
-            $message = "Settings And Password Updated";
-        }
-        else
-        {
-            $message = "Update Failed";
-        }
+        $message = "Update Failed";
     }
 }
 
+/* FETCH ADMIN DATA */
 
-$query = "
-SELECT name,email,bio
-FROM users
-WHERE id='$user_id'
-";
+$stmt = $conn->prepare("SELECT name,email,bio FROM users WHERE id=?");
 
-$result = mysqli_query($conn, $query);
+$stmt->bind_param("i", $user_id);
 
-$data = mysqli_fetch_assoc($result);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+$data = $result->fetch_assoc();
 
 ?>
 
@@ -182,25 +151,19 @@ Back Dashboard
 
 <input type="text"
 name="name"
-value="<?php echo $data['name']; ?>"
+value="<?php echo htmlspecialchars($data['name']); ?>"
 required>
 
 <label>Email</label>
 
 <input type="email"
 name="email"
-value="<?php echo $data['email']; ?>"
+value="<?php echo htmlspecialchars($data['email']); ?>"
 required>
 
 <label>Bio</label>
 
-<textarea name="bio"><?php echo $data['bio']; ?></textarea>
-
-<label>New Password</label>
-
-<input type="password"
-name="password"
-placeholder="Enter New Password">
+<textarea name="bio"><?php echo htmlspecialchars($data['bio']); ?></textarea>
 
 <button type="submit" name="update">
 Update Settings
